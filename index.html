@@ -76,13 +76,22 @@ h1,h2,h3{font-family:'Gowun Dodum','Noto Sans KR',sans-serif;font-weight:400;mar
 .talk-box{background:var(--accent-soft);border-radius:18px;padding:20px;margin-bottom:16px;}
 .talk-box h3{font-size:.82rem;letter-spacing:.04em;color:var(--accent);margin-bottom:8px;}
 .talk-box p{margin:0;color:var(--ink);font-size:1rem;font-weight:500;}
-.item-box{
-  display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,var(--primary-soft),var(--accent-soft));
-  border-radius:18px;padding:18px;margin-bottom:24px;
+.item-box{margin-bottom:24px;}
+.item-reveal-btn{
+  display:flex;align-items:center;gap:12px;width:100%;
+  background:var(--surface);border:1.5px dashed var(--accent);border-radius:18px;padding:18px;
+  cursor:pointer;text-align:left;font-family:'Noto Sans KR',sans-serif;
 }
-.item-box .emoji{font-size:2rem;}
-.item-box b{display:block;font-size:.78rem;color:var(--primary);letter-spacing:.04em;}
-.item-box span{font-size:1.05rem;color:var(--ink);font-weight:700;}
+.item-reveal-btn .ir-icon{font-size:1.6rem;flex-shrink:0;}
+.item-reveal-btn .ir-text{font-size:.92rem;color:var(--accent);font-weight:700;line-height:1.5;}
+.item-revealed{
+  display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,var(--primary-soft),var(--accent-soft));
+  border-radius:18px;padding:16px;
+}
+.item-revealed[hidden],.item-reveal-btn[hidden]{display:none;}
+.item-revealed img{width:64px;height:64px;object-fit:contain;border-radius:12px;background:var(--surface);flex-shrink:0;}
+.item-revealed b{display:block;font-size:.78rem;color:var(--primary);letter-spacing:.04em;}
+.item-revealed span.name{font-size:1.1rem;color:var(--ink);font-weight:700;}
 .restart-btn{
   display:block;width:100%;padding:15px;border-radius:14px;border:none;background:var(--ink);
   color:#fff;font-size:1rem;font-weight:700;cursor:pointer;
@@ -130,8 +139,14 @@ h1,h2,h3{font-family:'Gowun Dodum','Noto Sans KR',sans-serif;font-weight:400;mar
   </div>
 
   <div class="item-box">
-    <span class="emoji" id="itemEmoji"></span>
-    <div><b>전달 아이템</b><span id="itemName"></span></div>
+    <button class="item-reveal-btn" id="itemRevealBtn">
+      <span class="ir-icon">🎁</span>
+      <span class="ir-text">또래상담자와 이야기 나눈 뒤,<br>눌러서 아이템을 확인해보세요</span>
+    </button>
+    <div class="item-revealed" id="itemRevealed" hidden>
+      <img id="itemImg" alt="">
+      <div><b>전달 아이템</b><span class="name" id="itemName"></span></div>
+    </div>
   </div>
 
   <button class="restart-btn" id="restartBtn">처음으로 돌아가기</button>
@@ -144,7 +159,7 @@ const DATA = [
     emoji:'💗',
     title:'나를 얼마나 사랑하고 있을까',
     desc:'자존감 · 자기수용',
-    item:{emoji:'💌', name:'응원카드'},
+    item:{emoji:'💌', name:'응원카드', img:'items/love-card.png'},
     questions:[
       {q:'실수를 했을 때 가장 먼저 드는 생각은?', opts:[
         {t:'또 이렇게 망쳤네… 자책이 먼저 든다', type:'A'},
@@ -195,7 +210,7 @@ const DATA = [
     emoji:'🔥',
     title:'요즘 너무 지쳐있어',
     desc:'스트레스 · 번아웃',
-    item:{emoji:'🟣', name:'카피바라 모찌'},
+    item:{emoji:'🟣', name:'카피바라 모찌', img:'items/stress-mochi.png'},
     questions:[
       {q:'요즘 가장 많이 드는 생각은?', opts:[
         {t:'해야 할 일이 너무 많다', type:'A'},
@@ -246,7 +261,7 @@ const DATA = [
     emoji:'🌙',
     title:'혼자인 것 같은 기분이 들어',
     desc:'외로움 · 고립감',
-    item:{emoji:'🧿', name:'응원 부적 키링'},
+    item:{emoji:'🧿', name:'응원 부적 키링', img:'items/lonely-keyring.png'},
     questions:[
       {q:'사람들과 있어도 드는 느낌은?', opts:[
         {t:'웃고 있어도 혼자인 느낌이 든다', type:'A'},
@@ -297,7 +312,7 @@ const DATA = [
     emoji:'🌫️',
     title:'미래가 막막하고 불안해',
     desc:'진로 · 미래 불안',
-    item:{emoji:'📜', name:'랜덤 키캡'},
+    item:{emoji:'📜', name:'랜덤 키캡', img:'items/future-keycap.png'},
     questions:[
       {q:'미래를 생각하면 드는 느낌은?', opts:[
         {t:'남들은 다 앞서가는 것 같다', type:'A'},
@@ -452,12 +467,22 @@ function showResult(){
   document.getElementById('resultSub').textContent = r.sub;
   document.getElementById('resultDesc').textContent = r.desc;
   document.getElementById('resultTalk').textContent = r.talk;
-  document.getElementById('itemEmoji').textContent = current.item.emoji;
+  document.getElementById('itemImg').src = current.item.img;
+  document.getElementById('itemImg').alt = current.item.name;
   document.getElementById('itemName').textContent = current.item.name;
+
+  // 아이템은 또래상담 대화 뒤에 직접 눌러서 확인하도록 매번 닫힌 상태로 리셋
+  document.getElementById('itemRevealBtn').hidden = false;
+  document.getElementById('itemRevealed').hidden = true;
 
   document.getElementById('progressFill').style.width = '100%';
   showScreen('result');
 }
+
+document.getElementById('itemRevealBtn').addEventListener('click', ()=>{
+  document.getElementById('itemRevealBtn').hidden = true;
+  document.getElementById('itemRevealed').hidden = false;
+});
 
 document.getElementById('restartBtn').addEventListener('click', ()=>{
   current = null;
