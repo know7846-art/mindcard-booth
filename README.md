@@ -4,10 +4,12 @@
 
 ## 구성
 
-- `마음카드_부스.html` — 참가자용. 카드 선택 → 6문항 유형검사 → 결과(유형/대화멘트/아이템). 완료 시 Supabase에 기록 전송.
+- `index.html` — 참가자용. 카드 선택 → 6문항 유형검사 → 결과(유형/대화멘트/아이템). 완료 시 Supabase에 기록 전송.
 - `admin.html` — 관리자용. "참여 통계" 탭(전체/카드별 인원, 유형 분포, 최근 기록) + "운영 가이드" 탭.
+- `qr.html` — 참가자용 주소를 QR코드로 보여주는 인쇄용 페이지.
 - `config.js` — Supabase 연결 정보 (URL, anon key).
 - `schema.sql` — Supabase에 한 번 실행할 테이블/권한 설정 SQL.
+- `items/` — 아이템 실물 참고 이미지 (관리자 운영가이드 탭에 표시).
 
 ## 처음 설정하는 법
 
@@ -29,8 +31,9 @@
 1. GitHub에서 새 저장소 생성 (Public 또는 Private)
 2. 이 폴더의 파일 전체를 그 저장소에 push
 3. 저장소 **Settings → Pages** → Source를 main 브랜치로 설정
-4. 1~2분 뒤 `https://아이디.github.io/저장소이름/마음카드_부스.html` 로 접속해서 확인
+4. 1~2분 뒤 `https://아이디.github.io/저장소이름/` 로 접속해서 확인
 5. 관리자 페이지는 `https://아이디.github.io/저장소이름/admin.html`
+6. QR코드 인쇄용 페이지는 `https://아이디.github.io/저장소이름/qr.html` (관리자 페이지 상단 "QR코드 보기/인쇄"에서도 바로 열림)
 
 ### 3. 부스 운영 전 체크
 

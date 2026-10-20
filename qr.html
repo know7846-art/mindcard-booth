@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>마음카드 QR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+:root{
+  --bg:#FAF8F6;
+  --surface:#FFFFFF;
+  --ink:#241F2E;
+  --ink-soft:#6B6476;
+  --accent:#C9577A;
+  --accent-soft:#F8E3E9;
+  --line:#E7DED8;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;min-height:100vh;background:var(--bg);color:var(--ink);
+  font-family:'Noto Sans KR',sans-serif;
+  display:flex;align-items:center;justify-content:center;
+  padding:32px 18px;
+}
+h1,h2{font-family:'Gowun Dodum','Noto Sans KR',sans-serif;font-weight:400;margin:0;}
+.card{
+  width:100%;max-width:480px;background:var(--surface);border:1px solid var(--line);
+  border-radius:28px;padding:40px 32px;text-align:center;
+}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;display:block;margin-bottom:14px;}
+h1{font-size:1.6rem;line-height:1.4;margin-bottom:10px;}
+.sub{color:var(--ink-soft);font-size:.95rem;margin-bottom:28px;}
+.qr-wrap{display:inline-block;padding:18px;background:#fff;border-radius:20px;border:1px solid var(--line);margin-bottom:22px;}
+.qr-wrap img{display:block;width:260px;height:260px;}
+.url{font-size:.82rem;color:var(--ink-soft);word-break:break-all;background:var(--accent-soft);padding:10px 14px;border-radius:10px;}
+@media print{
+  body{background:#fff;padding:0;}
+  .card{border:none;box-shadow:none;}
+}
+</style>
+</head>
+<body>
+  <div class="card">
+    <span class="eyebrow">청년마음돌봄 부스</span>
+    <h1>오늘, 당신의 마음은<br>어디에 가까운가요?</h1>
+    <p class="sub">QR코드를 스캔해서 마음카드를 만나보세요</p>
+    <div class="qr-wrap">
+      <img id="qrImg" alt="마음카드 참가 QR코드">
+    </div>
+    <div class="url" id="urlText"></div>
+  </div>
+
+<script>
+const participantUrl = location.origin + location.pathname.replace(/qr\.html$/, 'index.html');
+document.getElementById('urlText').textContent = participantUrl;
+document.getElementById('qrImg').src =
+  'https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=0&data=' + encodeURIComponent(participantUrl);
+</script>
+</body>
+</html>

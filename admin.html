@@ -118,13 +118,14 @@ tr:first-child th{border-top:none;}
 .lane[data-c="stress"] .lr-label{color:var(--stress);}
 .lane[data-c="lonely"] .lr-label{color:var(--lonely);}
 .lane[data-c="future"] .lr-label{color:var(--future);}
-.item-chip{display:flex;align-items:center;gap:11px;border-radius:12px;padding:9px 11px;margin-top:auto;}
+.item-chip{display:flex;flex-direction:column;gap:9px;border-radius:14px;padding:10px;margin-top:auto;}
 .lane[data-c="love"] .item-chip{background:var(--love-soft);}
 .lane[data-c="stress"] .item-chip{background:var(--stress-soft);}
 .lane[data-c="lonely"] .item-chip{background:var(--lonely-soft);}
 .lane[data-c="future"] .item-chip{background:var(--future-soft);}
-.item-chip img{width:40px;height:40px;object-fit:cover;border-radius:9px;flex-shrink:0;background:var(--surface);}
-.item-chip b{font-size:.8rem;}
+.item-chip .img-wrap{width:100%;height:150px;border-radius:10px;overflow:hidden;background:var(--surface);display:flex;align-items:center;justify-content:center;}
+.item-chip img{width:100%;height:100%;object-fit:contain;}
+.item-chip b{font-size:.84rem;align-self:flex-start;}
 
 .script-box{border:1px solid var(--line);border-radius:16px;padding:20px 22px;background:var(--surface-2);margin-bottom:32px;}
 .script-box h3{font-size:.95rem;margin-bottom:5px;}
@@ -146,7 +147,10 @@ tr:first-child th{border-top:none;}
 <div class="wrap">
   <div class="topbar">
     <h1>마음카드 관리자</h1>
-    <a class="back" href="마음카드_부스.html">← 부스 화면으로</a>
+    <div style="display:flex;gap:14px;align-items:center;">
+      <a class="back" href="qr.html" target="_blank" rel="noopener">QR코드 보기/인쇄</a>
+      <a class="back" href="index.html">← 부스 화면으로</a>
+    </div>
   </div>
 
   <div class="tabs">
@@ -188,28 +192,28 @@ tr:first-child th{border-top:none;}
         <div class="lane-head"><span class="emoji">💗</span><h3>나를 얼마나 사랑하고 있을까</h3><span class="tag">자존감 · 자기수용</span></div>
         <div class="lane-body">
           <div class="lane-row"><div class="lr-label">대화 시작 멘트</div><div class="lr-text">"요즘 나 자신한테 가장 많이 하는 말이 뭐예요?"</div></div>
-          <div class="item-chip"><img src="items/love-card.png" alt="응원카드"><b>응원카드</b></div>
+          <div class="item-chip"><div class="img-wrap"><img src="items/love-card.png" alt="응원카드"></div><b>응원카드</b></div>
         </div>
       </div>
       <div class="lane" data-c="stress">
         <div class="lane-head"><span class="emoji">🔥</span><h3>요즘 너무 지쳐있어</h3><span class="tag">스트레스 · 번아웃</span></div>
         <div class="lane-body">
           <div class="lane-row"><div class="lr-label">대화 시작 멘트</div><div class="lr-text">"요즘 제일 나를 지치게 하는 게 뭐예요?"</div></div>
-          <div class="item-chip"><img src="items/stress-mochi.png" alt="카피바라 모찌"><b>카피바라 모찌</b></div>
+          <div class="item-chip"><div class="img-wrap"><img src="items/stress-mochi.png" alt="카피바라 모찌"></div><b>카피바라 모찌</b></div>
         </div>
       </div>
       <div class="lane" data-c="lonely">
         <div class="lane-head"><span class="emoji">🌙</span><h3>혼자인 것 같은 기분이 들어</h3><span class="tag">외로움 · 고립감</span></div>
         <div class="lane-body">
           <div class="lane-row"><div class="lr-label">대화 시작 멘트</div><div class="lr-text">"요즘 누구랑 가장 많이 연결돼 있다고 느껴요?"</div></div>
-          <div class="item-chip"><img src="items/lonely-keyring.png" alt="응원 부적 키링"><b>응원 부적 키링</b></div>
+          <div class="item-chip"><div class="img-wrap"><img src="items/lonely-keyring.png" alt="응원 부적 키링"></div><b>응원 부적 키링</b></div>
         </div>
       </div>
       <div class="lane" data-c="future">
         <div class="lane-head"><span class="emoji">🌫️</span><h3>미래가 막막하고 불안해</h3><span class="tag">진로 · 미래 불안</span></div>
         <div class="lane-body">
           <div class="lane-row"><div class="lr-label">대화 시작 멘트</div><div class="lr-text">"요즘 제일 불안한 게 뭐예요?"</div></div>
-          <div class="item-chip"><img src="items/future-keycap.png" alt="랜덤 키캡"><b>랜덤 키캡</b></div>
+          <div class="item-chip"><div class="img-wrap"><img src="items/future-keycap.png" alt="랜덤 키캡"></div><b>랜덤 키캡</b></div>
         </div>
       </div>
     </div>
