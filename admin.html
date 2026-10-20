@@ -127,11 +127,37 @@ tr:first-child th{border-top:none;}
 .item-chip img{width:100%;height:100%;object-fit:contain;}
 .item-chip b{font-size:.84rem;align-self:flex-start;}
 
-.script-box{border:1px solid var(--line);border-radius:16px;padding:20px 22px;background:var(--surface-2);margin-bottom:32px;}
+.script-box{border:1px solid var(--line);border-radius:16px;padding:20px 22px;background:var(--surface-2);margin-bottom:20px;}
 .script-box h3{font-size:.95rem;margin-bottom:5px;}
 .script-box p{color:var(--ink-soft);font-size:.86rem;margin:0 0 12px;}
 .script-box .line{font-size:.9rem;color:var(--ink);font-weight:500;padding:11px 13px;background:var(--surface);border-radius:11px;margin-bottom:7px;}
 .script-box .line:last-child{margin-bottom:0;}
+
+.tone-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:32px;}
+@media (max-width:700px){.tone-grid{grid-template-columns:1fr;}}
+.tone-card{border:1px solid var(--line);border-radius:14px;padding:16px 17px;background:var(--surface);}
+.tone-card .tc-label{font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:var(--accent);margin-bottom:6px;}
+.tone-card p{margin:0;font-size:.86rem;color:var(--ink-soft);}
+
+.scoring-box{border:1px solid var(--line);border-radius:16px;padding:20px 22px;background:var(--surface);margin-bottom:32px;}
+.scoring-box h3{font-size:.95rem;margin-bottom:8px;}
+.scoring-box p{color:var(--ink-soft);font-size:.86rem;margin:0 0 10px;}
+.scoring-box p:last-child{margin-bottom:0;}
+
+.type-guide{margin-bottom:12px;}
+.type-guide summary{
+  cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;
+  padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--surface);font-size:.95rem;
+}
+.type-guide summary::-webkit-details-marker{display:none;}
+.type-guide summary .tg-emoji{font-size:1.2rem;}
+.type-guide summary .tg-tag{margin-left:auto;font-size:.72rem;color:var(--ink-faint);}
+.type-guide[open] summary{border-radius:14px 14px 0 0;border-bottom:none;}
+.type-guide-body{border:1px solid var(--line);border-top:none;border-radius:0 0 14px 14px;padding:16px;background:var(--surface-2);display:flex;flex-direction:column;gap:14px;}
+.type-guide-body .tg-row .tg-label{font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:var(--accent);margin-bottom:5px;}
+.type-guide-body .tg-row p{margin:0;font-size:.86rem;color:var(--ink-soft);}
+.type-guide-body .tg-script{background:var(--surface);border-radius:11px;padding:11px 13px;font-size:.88rem;color:var(--ink);font-weight:500;}
+.type-guide-body .tg-script + .tg-script{margin-top:6px;}
 
 .ops{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:10px;}
 @media (max-width:700px){.ops{grid-template-columns:1fr;}}
@@ -228,12 +254,166 @@ tr:first-child th{border-top:none;}
       <div class="line">4. 대화를 마무리하며 카드에 맞는 아이템을 건네요. — "이거 가져가서 오늘 하루 떠올려봐요."</div>
     </div>
 
-    <div class="section-label"><span class="sl-eyebrow">Operations</span><h2>운영 체크리스트</h2></div>
+    <div class="section-label"><span class="sl-eyebrow">Tone</span><h2>어떤 느낌으로 이야기할까</h2></div>
+    <div class="tone-grid">
+      <div class="tone-card"><div class="tc-label">기본 태도</div><p>진단이 아니라 대화를 여는 도구예요. 맞다/틀리다로 판단하지 말고 "이런 면이 있을 수 있겠다" 정도로 가볍게 전달해주세요.</p></div>
+      <div class="tone-card"><div class="tc-label">말투</div><p>존댓말이지만 편하게. "~하셨나요" 보다는 "~했어요?, ~그랬죠?" 처럼 또래끼리 이야기하듯 자연스럽게 말해주세요.</p></div>
+      <div class="tone-card"><div class="tc-label">침묵 다루기</div><p>질문을 던진 뒤 바로 다음 말을 잇지 말고 2~3초 기다려주세요. 대답을 안 해도 괜찮고, 그냥 다음으로 넘어가면 돼요.</p></div>
+      <div class="tone-card"><div class="tc-label">선 지키기</div><p>조언하거나 해결하려 하지 마세요. 들어주는 것만으로 충분해요. 더 깊은 이야기가 나오면 1388 같은 전문기관 연계를 안내해주세요.</p></div>
+    </div>
+
+    <div class="section-label"><span class="sl-eyebrow">Scoring</span><h2>결과는 어떻게 나오나요</h2></div>
+    <div class="scoring-box">
+      <h3>6문항 중 가장 많이 겹치는 보기가 오늘의 유형이에요</h3>
+      <p>각 카드는 6개의 질문으로 구성돼 있고, 질문마다 4개의 보기(A~D)가 있어요. 참가자가 고른 보기 중 가장 많이 선택된 보기가 "오늘의 유형"으로 나와요. 예를 들어 6개 중 3개를 A, 2개를 B, 1개를 C로 골랐다면 A 유형 결과가 나오는 식이에요.</p>
+      <p>유형은 성격을 규정하는 게 아니라 "오늘, 지금 이 순간" 어디에 더 가까운지를 보여주는 거예요. 같은 사람이 다음에 다시 해도 다른 유형이 나올 수 있어요 — 이 점을 참가자에게 살짝 알려주면 "정답을 찾아야 한다"는 부담을 덜어줄 수 있어요.</p>
+    </div>
+
+    <div class="section-label"><span class="sl-eyebrow">Type Scripts</span><h2>유형별 해석 &amp; 멘트 가이드</h2></div>
+
+    <details class="type-guide" data-c="love" open>
+      <summary><span class="tg-emoji">💗</span> 나를 얼마나 사랑하고 있을까 <span class="tg-tag">4개 유형</span></summary>
+      <div class="type-guide-body">
+        <div class="tg-row">
+          <div class="tg-label">A · 엄격한 코치형</div>
+          <p>스스로에게 너무 높은 기준을 들이대며 잘한 것보다 부족한 것을 먼저 보는 상태예요. 그만큼 열심히 살아왔다는 뜻이기도 해요.</p>
+          <div class="tg-script">"이 유형 보면, 스스로한테 되게 엄격하게 살아온 것 같아요. 그만큼 열심히 해왔다는 뜻이기도 하거든요."</div>
+          <div class="tg-script">질문: "요즘 나 자신한테 가장 많이 하는 말이 뭐예요?"</div>
+          <div class="tg-script">전달: "오늘 하루는 그 기준 살짝 내려놓고, 이 응원카드 보면서 나한테 다정한 말 한번 해줘요."</div>
+        </div>
+        <div class="tg-row">
+          <div class="tg-label">B · 눈치보는 거울형</div>
+          <p>자기 기준보다 남의 시선이 먼저 떠오르는 상태예요. 맞춰주려다 보면 내가 뭘 원하는지 뒤로 밀려나요.</p>
+          <div class="tg-script">"다른 사람 시선에 많이 맞춰온 편인 것 같아요, 그러다 보면 내가 뭘 원하는지 놓치기 쉽잖아요."</div>
+          <div class="tg-script">질문: "다른 사람 시선 말고, 진짜 내가 원하는 건 뭐예요?"</div>
+          <div class="tg-script">전달: "이 카드 가져가서, 오늘만큼은 내 마음이 먼저라고 생각해봐요."</div>
+        </div>
+        <div class="tg-row">
+          <div class="tg-label">C · 다정한 친구형</div>
+          <p>스스로에게 너그럽고 실수해도 다시 일어설 힘을 믿는 상태예요. 이미 좋은 자기돌봄 습관을 갖고 있어요.</p>
+          <div class="tg-script">"스스로를 꽤 잘 돌보고 있는 편이네요. 이런 태도 유지하는 것도 쉽지 않은 건데."</div>
+          <div class="tg-script">질문: "요즘 스스로를 잘 돌본 순간이 있었다면 뭐예요?"</div>
+          <div class="tg-script">전달: "지금처럼만 하면 돼요. 이 카드는 그 다정함 잊지 말라는 의미로 드릴게요."</div>
+        </div>
+        <div class="tg-row">
+          <div class="tg-label">D · 무심한 방관자형</div>
+          <p>나에 대한 생각 자체를 잘 안 하는 상태예요. 괜찮아서가 아니라 챙길 여유나 습관이 없었을 수도 있어요.</p>
+          <div class="tg-script">"나한테 별로 신경 안 쓰고 지내온 것 같아요. 바빠서 그랬을 수도 있고요."</div>
+          <div class="tg-script">질문: "오늘 하루, 나를 위해 한 게 있다면 뭐예요?"</div>
+          <div class="tg-script">전달: "이 카드 보면서 하루에 한 번이라도 나를 떠올리는 연습 해봐요."</div>
+        </div>
+      </div>
+    </details>
+
+    <details class="type-guide" data-c="stress">
+      <summary><span class="tg-emoji">🔥</span> 요즘 너무 지쳐있어 <span class="tg-tag">4개 유형</span></summary>
+      <div class="type-guide-body">
+        <div class="tg-row">
+          <div class="tg-label">A · 과열형</div>
+          <p>할 일 생각이 머릿속을 떠나지 않는 상태예요. 쉬는 순간에도 다음 일이 떠올라 진짜 쉼이 어려웠을 거예요.</p>
+          <div class="tg-script">"할 일이 머릿속에서 계속 돌아가는 것 같아요, 쉬어도 진짜 쉬는 게 아니었겠어요."</div>
+          <div class="tg-script">질문: "요즘 할 일 목록에서 하나만 빼도 된다면 뭘 뺄래요?"</div>
+          <div class="tg-script">전달: "이 모찌 만지작거리면서, 잠깐이라도 할 일 생각 내려놔봐요."</div>
+        </div>
+        <div class="tg-row">
+          <div class="tg-label">B · 억눌림형</div>
+          <p>불편하거나 힘든 걸 표현하기보다 속으로 삭이는 편이에요. 괜찮아 보여도 쌓인 게 많을 수 있어요.</p>
+          <div class="tg-script">"힘든 걸 잘 참아온 편인 것 같아요. 그만큼 속으로 쌓인 것도 많았을 텐데."</div>
+          <div class="tg-script">질문: "요즘 참고 있는 말이 있다면 뭐예요?"</div>
+          <div class="tg-script">전달: "이 모찌한테라도 가끔 털어놔요, 괜찮아요."</div>
+        </div>
+        <div class="tg-row">
+          <div class="tg-label">C · 방전형</div>
+          <p>의욕이 없는 건 게을러서가 아니라, 이미 많이 쓴 에너지가 채워지지 않은 상태예요. 지금은 회복이 먼저예요.</p>
+          <div class="tg-script">"에너지가 많이 소진된 상태 같아요. 게으른 게 아니라 정말 많이 썼던 거예요."</div>
+          <div class="tg-script">질문: "요즘 조금이라도 힘이 났던 순간이 있었어요?"</div>
+          <div class="tg-script">전달: "오늘은 애쓰지 말고, 이 모찌처럼 그냥 말랑하게 쉬어도 돼요."</div>
+        </div>
+        <div class="tg-row">
+          <div class="tg-label">D · 예민형</div>
+          <p>신경이 곤두서 있어서 평소라면 넘겼을 일에도 쉽게 반응하게 돼요. 몸과 마음이 계속 경계 상태예요.</p>
+          <div class="tg-script">"요즘 작은 일에도 신경이 많이 쓰이는 상태인 것 같아요."</div>
+          <div class="tg-script">질문: "요즘 유난히 신경 쓰이는 게 뭐예요?"</div>
+          <div class="tg-script">전달: "이 모찌 꾹꾹 누르면서 긴장 좀 풀어봐요."</div>
+        </div>
+      </div>
+    </details>
+
+    <details class="type-guide" data-c="lonely">
+      <summary><span class="tg-emoji">🌙</span> 혼자인 것 같은 기분이 들어 <span class="tg-tag">4개 유형</span></summary>
+      <div class="type-guide-body">
+        <div class="tg-row">
+          <div class="tg-label">A · 군중속고립형</div>
+          <p>관계는 있지만 진짜 내 얘기를 나눌 사람은 없다고 느끼는 상태예요. 겉으로는 잘 지내는 것처럼 보일 수 있어요.</p>
+          <div class="tg-script">"사람은 많은데 진짜 마음 터놓을 사람은 없는 느낌인 것 같아요."</div>
+          <div class="tg-script">질문: "사람은 많은데 진짜 얘기할 사람은 누구예요?"</div>
+          <div class="tg-script">전달: "이 키링 보면서, 오늘 여기서 나눈 이 대화도 그런 연결 중 하나라고 생각해줘요."</div>
+        </div>
+        <div class="tg-row">
+          <div class="tg-label">B · 단절형</div>
+          <p>연락하고 만나는 관계 자체가 줄어든 상태예요. 혼자가 익숙해졌지만, 그만큼 연결이 그리운 순간도 있을 거예요.</p>
+          <div class="tg-script">"요즘 관계 자체가 좀 줄어든 것 같아요. 혼자가 익숙해졌어도 가끔은 그립잖아요."</div>
+          <div class="tg-script">질문: "요즘 누구랑 가장 자주 연락해요?"</div>
+          <div class="tg-script">전달: "이 부적 가지고 있다가, 연락하고 싶은 사람 생기면 먼저 톡 한번 보내봐요."</div>
+        </div>
+        <div class="tg-row">
+          <div class="tg-label">C · 소외형</div>
+          <p>모임이나 관계 안에 있어도 내 자리가 아닌 것 같은 느낌이 드는 상태예요. 소속감이 부족하게 느껴질 수 있어요.</p>
+          <div class="tg-script">"어딘가에 있어도 내 자리가 아닌 것 같은 느낌 받을 때 있죠."</div>
+          <div class="tg-script">질문: "어디에 있을 때 가장 나답게 느껴져요?"</div>
+          <div class="tg-script">전달: "이 키링은 당신 자리가 분명히 있다는 의미로 드릴게요."</div>
+        </div>
+        <div class="tg-row">
+          <div class="tg-label">D · 그리움형</div>
+          <p>지금 상황보다, 예전에 있던 어떤 사람·관계의 부재가 외로움의 중심인 상태예요. 그 관계가 남긴 자리가 클 수 있어요.</p>
+          <div class="tg-script">"지금보다는 예전의 누군가가 많이 생각나는 상태 같아요."</div>
+          <div class="tg-script">질문: "요즘 가장 그리운 사람이 있다면 누구예요?"</div>
+          <div class="tg-script">전달: "그 그리움도 소중한 마음이에요. 이 키링 가지고 가서 가끔 떠올려줘요."</div>
+        </div>
+      </div>
+    </details>
+
+    <details class="type-guide" data-c="future">
+      <summary><span class="tg-emoji">🌫️</span> 미래가 막막하고 불안해 <span class="tg-tag">4개 유형</span></summary>
+      <div class="type-guide-body">
+        <div class="tg-row">
+          <div class="tg-label">A · 비교형</div>
+          <p>내 속도보다 남들의 속도가 기준이 되어버린 상태예요. 비교하다 보면 지금의 나는 늘 부족해 보일 수 있어요.</p>
+          <div class="tg-script">"남들이랑 많이 비교하게 되는 시기인 것 같아요."</div>
+          <div class="tg-script">질문: "요즘 누구랑 자꾸 나를 비교하게 돼요?"</div>
+          <div class="tg-script">전달: "이 키캡 뽑은 것처럼, 각자 속도는 랜덤이에요. 당신 속도대로 가면 돼요."</div>
+        </div>
+        <div class="tg-row">
+          <div class="tg-label">B · 길없음형</div>
+          <p>뭘 해야 할지 몰라서 막막한 상태예요. 방향이 없다는 건 틀렸다는 뜻이 아니라, 아직 못 찾았다는 뜻이에요.</p>
+          <div class="tg-script">"방향 자체가 잘 안 보이는 상태인 것 같아요. 못 찾은 거지 틀린 게 아니에요."</div>
+          <div class="tg-script">질문: "요즘 조금이라도 관심이 가는 게 있다면 뭐예요?"</div>
+          <div class="tg-script">전달: "이 키캡처럼, 아직 안 열어본 선택지가 많이 남아있어요."</div>
+        </div>
+        <div class="tg-row">
+          <div class="tg-label">C · 완벽압박형</div>
+          <p>틀릴까봐, 실패할까봐 시작 자체가 어려운 상태예요. 완벽하게 하려는 마음이 오히려 발을 묶고 있을 수 있어요.</p>
+          <div class="tg-script">"실패할까봐 시작을 못 하고 있는 상태 같아요."</div>
+          <div class="tg-script">질문: "작게 시도해볼 수 있는 한 가지가 있다면?"</div>
+          <div class="tg-script">전달: "완벽한 선택 아니어도 괜찮아요. 이 키캡도 랜덤으로 뽑는 거잖아요."</div>
+        </div>
+        <div class="tg-row">
+          <div class="tg-label">D · 무기력형</div>
+          <p>미래 생각 자체가 버거워서 자꾸 미루거나 피하게 되는 상태예요. 지금은 몰아붙이기보다 잠깐의 쉼이 필요해요.</p>
+          <div class="tg-script">"미래 생각하는 것 자체가 버거운 상태인 것 같아요."</div>
+          <div class="tg-script">질문: "요즘 아무 생각 없이 쉰 적이 있어요?"</div>
+          <div class="tg-script">전달: "오늘은 그냥 이 키캡 받아가는 걸로 충분해요, 애쓰지 않아도 돼요."</div>
+        </div>
+      </div>
+    </details>
+
+    <div class="section-label" style="margin-top:36px;"><span class="sl-eyebrow">Operations</span><h2>운영 체크리스트</h2></div>
     <div class="ops">
       <div class="ops-card">
         <h3>부스 세팅 전</h3>
         <ul>
-          <li>태블릿·휴대폰에 마음카드 웹앱 열어두기 (와이파이 없이도 동작)</li>
+          <li>참가자 QR코드 인쇄해서 부스에 비치 (관리자 페이지 상단 "QR코드 보기/인쇄")</li>
+          <li>태블릿·휴대폰에서 참가자 페이지 미리 열어 네트워크 상태 확인</li>
           <li>4가지 아이템(응원카드·카피바라 모찌·응원 부적 키링·랜덤 키캡) 각 라인별로 분리 배치</li>
           <li>또래상담자 전원에게 이 가이드 공유</li>
           <li>상담이 길어질 경우를 대비해 대기 줄/번호표 준비</li>
