@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>마음카드 관리자</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap">
+<script src="config.js"></script>
+<style>
+:root{
+  --bg:#FAF8F6;
+  --surface:#FFFFFF;
+  --surface-2:#F4EFEA;
+  --ink:#241F2E;
+  --ink-soft:#6B6476;
+  --ink-faint:#9994A3;
+  --accent:#C9577A;
+  --accent-soft:#F8E3E9;
+  --line:#E7DED8;
+  --love:#C9577A; --love-soft:#FBE7ED;
+  --stress:#C98A2E; --stress-soft:#FBEBD4;
+  --lonely:#5B6FB0; --lonely-soft:#E7EAFA;
+  --future:#4E9488; --future-soft:#DFF1EC;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',sans-serif;line-height:1.6;}
+h1,h2,h3{font-family:'Gowun Dodum','Noto Sans KR',sans-serif;font-weight:400;margin:0;}
+.mono{font-family:'JetBrains Mono',monospace;}
+.wrap{max-width:980px;margin:0 auto;padding:28px 18px 60px;}
+
+/* ---- header / tabs ---- */
+.topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:22px;}
+.topbar h1{font-size:1.5rem;}
+.topbar .back{font-size:.82rem;color:var(--ink-faint);text-decoration:none;}
+.tabs{display:flex;gap:6px;background:var(--surface-2);border-radius:12px;padding:4px;margin-bottom:26px;width:fit-content;}
+.tab-btn{border:none;background:none;padding:9px 18px;border-radius:9px;font-size:.88rem;font-weight:700;color:var(--ink-faint);cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
+.tab-btn.active{background:var(--surface);color:var(--ink);}
+.tabpanel{display:none;}
+.tabpanel.active{display:block;}
+
+/* ---- stat tiles ---- */
+.stats-top{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px;}
+@media (max-width:760px){.stats-top{grid-template-columns:repeat(2,1fr);}}
+.stat-tile{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:16px 14px;}
+.stat-tile .num{font-family:'JetBrains Mono',monospace;font-size:1.7rem;font-weight:700;font-variant-numeric:tabular-nums;}
+.stat-tile .lbl{font-size:.78rem;color:var(--ink-faint);margin-top:4px;}
+.stat-tile[data-c="love"] .num{color:var(--love);}
+.stat-tile[data-c="stress"] .num{color:var(--stress);}
+.stat-tile[data-c="lonely"] .num{color:var(--lonely);}
+.stat-tile[data-c="future"] .num{color:var(--future);}
+
+/* ---- breakdown cards ---- */
+.breakdown{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:26px;}
+@media (max-width:620px){.breakdown{grid-template-columns:1fr;}}
+.bd-card{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:18px;}
+.bd-card .bd-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.bd-card .bd-head .dot{width:10px;height:10px;border-radius:50%;}
+.bd-card[data-c="love"] .dot{background:var(--love);}
+.bd-card[data-c="stress"] .dot{background:var(--stress);}
+.bd-card[data-c="lonely"] .dot{background:var(--lonely);}
+.bd-card[data-c="future"] .dot{background:var(--future);}
+.bd-card h3{font-size:.95rem;}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:.82rem;}
+.bar-row .bar-label{width:120px;flex-shrink:0;color:var(--ink-soft);}
+.bar-track{flex:1;height:8px;border-radius:100px;background:var(--surface-2);overflow:hidden;}
+.bar-fill{height:100%;border-radius:100px;}
+.bd-card[data-c="love"] .bar-fill{background:var(--love);}
+.bd-card[data-c="stress"] .bar-fill{background:var(--stress);}
+.bd-card[data-c="lonely"] .bar-fill{background:var(--lonely);}
+.bd-card[data-c="future"] .bar-fill{background:var(--future);}
+.bar-row .bar-count{width:28px;text-align:right;flex-shrink:0;font-family:'JetBrains Mono',monospace;color:var(--ink-faint);}
+
+/* ---- recent table ---- */
+.recent{border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden;margin-bottom:10px;}
+.recent-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 0;}
+.recent-head h3{font-size:.95rem;}
+.recent-head button{border:1px solid var(--line);background:var(--surface);color:var(--ink-faint);font-size:.78rem;padding:6px 12px;border-radius:9px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
+.recent-head button:hover{color:var(--accent);border-color:var(--accent);}
+table{width:100%;border-collapse:collapse;margin-top:12px;}
+th{text-align:left;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint);padding:8px 18px;border-top:1px solid var(--line);}
+td{padding:10px 18px;font-size:.86rem;border-top:1px solid var(--line);color:var(--ink-soft);}
+tr:first-child th{border-top:none;}
+.empty-row{padding:40px 18px;text-align:center;color:var(--ink-faint);font-size:.88rem;}
+
+/* ---- guide tab ---- */
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-block:8px 36px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface);}
+@media (max-width:700px){.flow{grid-template-columns:1fr;}}
+.flow-step{padding:20px 18px;position:relative;}
+.flow-step + .flow-step{border-left:1px solid var(--line);}
+@media (max-width:700px){.flow-step + .flow-step{border-left:none;border-top:1px solid var(--line);}}
+.flow-step .fn{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--accent);font-weight:700;margin-bottom:8px;}
+.flow-step h3{font-size:1rem;margin-bottom:5px;}
+.flow-step p{color:var(--ink-soft);font-size:.84rem;margin:0;}
+
+.section-label{display:flex;align-items:baseline;gap:12px;margin-block:30px 16px;}
+.section-label:first-of-type{margin-top:0;}
+.section-label .sl-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;}
+.section-label h2{font-size:1.25rem;}
+
+.lanes{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:10px;}
+@media (max-width:900px){.lanes{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:540px){.lanes{grid-template-columns:1fr;}}
+.lane{border:1px solid var(--line);border-radius:18px;background:var(--surface);overflow:hidden;display:flex;flex-direction:column;}
+.lane-head{padding:18px 16px 14px;}
+.lane .emoji{font-size:1.5rem;display:inline-flex;width:40px;height:40px;border-radius:12px;align-items:center;justify-content:center;margin-bottom:10px;}
+.lane-head h3{font-size:.98rem;margin-bottom:3px;}
+.lane-head .tag{font-size:.74rem;color:var(--ink-faint);}
+.lane[data-c="love"] .emoji{background:var(--love-soft);}
+.lane[data-c="stress"] .emoji{background:var(--stress-soft);}
+.lane[data-c="lonely"] .emoji{background:var(--lonely-soft);}
+.lane[data-c="future"] .emoji{background:var(--future-soft);}
+.lane-body{padding:0 16px 18px;flex:1;display:flex;flex-direction:column;gap:12px;}
+.lane-row{border-top:1px solid var(--line);padding-top:10px;}
+.lane-row .lr-label{font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;font-weight:700;margin-bottom:5px;}
+.lane-row .lr-text{font-size:.82rem;color:var(--ink-soft);}
+.lane[data-c="love"] .lr-label{color:var(--love);}
+.lane[data-c="stress"] .lr-label{color:var(--stress);}
+.lane[data-c="lonely"] .lr-label{color:var(--lonely);}
+.lane[data-c="future"] .lr-label{color:var(--future);}
+.item-chip{display:flex;align-items:center;gap:9px;border-radius:12px;padding:9px 11px;margin-top:auto;}
+.lane[data-c="love"] .item-chip{background:var(--love-soft);}
+.lane[data-c="stress"] .item-chip{background:var(--stress-soft);}
+.lane[data-c="lonely"] .item-chip{background:var(--lonely-soft);}
+.lane[data-c="future"] .item-chip{background:var(--future-soft);}
+.item-chip b{font-size:.8rem;}
+
+.script-box{border:1px solid var(--line);border-radius:16px;padding:20px 22px;background:var(--surface-2);margin-bottom:32px;}
+.script-box h3{font-size:.95rem;margin-bottom:5px;}
+.script-box p{color:var(--ink-soft);font-size:.86rem;margin:0 0 12px;}
+.script-box .line{font-size:.9rem;color:var(--ink);font-weight:500;padding:11px 13px;background:var(--surface);border-radius:11px;margin-bottom:7px;}
+.script-box .line:last-child{margin-bottom:0;}
+
+.ops{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:10px;}
+@media (max-width:700px){.ops{grid-template-columns:1fr;}}
+.ops-card{border:1px solid var(--line);border-radius:16px;padding:20px;background:var(--surface);}
+.ops-card h3{font-size:.92rem;margin-bottom:12px;color:var(--accent);}
+.ops-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;}
+.ops-card li{display:flex;gap:9px;align-items:flex-start;font-size:.86rem;color:var(--ink-soft);}
+.ops-card li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:7px;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <h1>마음카드 관리자</h1>
+    <a class="back" href="마음카드_부스.html">← 부스 화면으로</a>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="stats">참여 통계</button>
+    <button class="tab-btn" data-tab="guide">운영 가이드</button>
+  </div>
+
+  <!-- ===== 통계 탭 ===== -->
+  <section class="tabpanel active" id="tab-stats">
+    <div class="stats-top" id="statsTop"></div>
+    <div class="breakdown" id="breakdown"></div>
+
+    <div class="recent">
+      <div class="recent-head">
+        <h3>최근 참여 기록</h3>
+        <div style="display:flex;gap:8px;">
+          <button id="refreshBtn">새로고침</button>
+          <button id="resetBtn">기록 초기화</button>
+        </div>
+      </div>
+      <div id="recentWrap"></div>
+    </div>
+    <p id="sourceNote" style="font-size:.78rem;color:var(--ink-faint);margin-top:10px;"></p>
+  </section>
+
+  <!-- ===== 운영 가이드 탭 ===== -->
+  <section class="tabpanel" id="tab-guide">
+
+    <div class="flow">
+      <div class="flow-step"><span class="fn">01</span><h3>마음카드 소개</h3><p>4가지 마음카드를 보여주고, 지금 가장 가까운 카드를 직접 고르게 해요.</p></div>
+      <div class="flow-step"><span class="fn">02</span><h3>마음 체크</h3><p>6문항 간이검사(약 1분)로 오늘의 유형을 확인해요. 진단이 아니라 대화의 단서예요.</p></div>
+      <div class="flow-step"><span class="fn">03</span><h3>또래상담 대화</h3><p>결과 화면의 질문을 시작점으로, 2~3분 정도 가볍게 이야기를 나눠요.</p></div>
+      <div class="flow-step"><span class="fn">04</span><h3>아이템 전달</h3><p>고른 카드에 맞는 아이템을 건네며 마무리해요.</p></div>
+    </div>
+
+    <div class="section-label"><span class="sl-eyebrow">Lane 01–04</span><h2>4가지 마음카드 한눈에 보기</h2></div>
+    <div class="lanes">
+      <div class="lane" data-c="love">
+        <div class="lane-head"><span class="emoji">💗</span><h3>나를 얼마나 사랑하고 있을까</h3><span class="tag">자존감 · 자기수용</span></div>
+        <div class="lane-body">
+          <div class="lane-row"><div class="lr-label">대화 시작 멘트</div><div class="lr-text">"요즘 나 자신한테 가장 많이 하는 말이 뭐예요?"</div></div>
+          <div class="item-chip"><span>💌</span><b>응원카드</b></div>
+        </div>
+      </div>
+      <div class="lane" data-c="stress">
+        <div class="lane-head"><span class="emoji">🔥</span><h3>요즘 너무 지쳐있어</h3><span class="tag">스트레스 · 번아웃</span></div>
+        <div class="lane-body">
+          <div class="lane-row"><div class="lr-label">대화 시작 멘트</div><div class="lr-text">"요즘 제일 나를 지치게 하는 게 뭐예요?"</div></div>
+          <div class="item-chip"><span>🟣</span><b>스트레스볼</b></div>
+        </div>
+      </div>
+      <div class="lane" data-c="lonely">
+        <div class="lane-head"><span class="emoji">🌙</span><h3>혼자인 것 같은 기분이 들어</h3><span class="tag">외로움 · 고립감</span></div>
+        <div class="lane-body">
+          <div class="lane-row"><div class="lr-label">대화 시작 멘트</div><div class="lr-text">"요즘 누구랑 가장 많이 연결돼 있다고 느껴요?"</div></div>
+          <div class="item-chip"><span>🧿</span><b>응원 부적</b></div>
+        </div>
+      </div>
+      <div class="lane" data-c="future">
+        <div class="lane-head"><span class="emoji">🌫️</span><h3>미래가 막막하고 불안해</h3><span class="tag">진로 · 미래 불안</span></div>
+        <div class="lane-body">
+          <div class="lane-row"><div class="lr-label">대화 시작 멘트</div><div class="lr-text">"요즘 제일 불안한 게 뭐예요?"</div></div>
+          <div class="item-chip"><span>📜</span><b>다짐카드</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label"><span class="sl-eyebrow">Peer Script</span><h2>또래상담자 대화 가이드</h2></div>
+    <div class="script-box">
+      <h3>결과가 나온 뒤 이렇게 이어가요</h3>
+      <p>결과 유형은 정답이 아니라 대화를 여는 질문이에요.</p>
+      <div class="line">1. 결과 화면의 유형 이름과 설명을 함께 읽어요. — "이거 보니까 어때요, 좀 맞는 것 같아요?"</div>
+      <div class="line">2. 화면에 제시된 질문으로 대화를 열어요. (라인별 "대화 시작 멘트" 참고)</div>
+      <div class="line">3. 판단하거나 조언하려 하지 말고, 2~3분 정도 들어주는 데 집중해요.</div>
+      <div class="line">4. 대화를 마무리하며 카드에 맞는 아이템을 건네요. — "이거 가져가서 오늘 하루 떠올려봐요."</div>
+    </div>
+
+    <div class="section-label"><span class="sl-eyebrow">Operations</span><h2>운영 체크리스트</h2></div>
+    <div class="ops">
+      <div class="ops-card">
+        <h3>부스 세팅 전</h3>
+        <ul>
+          <li>태블릿·휴대폰에 마음카드 웹앱 열어두기 (와이파이 없이도 동작)</li>
+          <li>4가지 아이템(응원카드·스트레스볼·응원부적·다짐카드) 각 라인별로 분리 배치</li>
+          <li>또래상담자 전원에게 이 가이드 공유</li>
+          <li>상담이 길어질 경우를 대비해 대기 줄/번호표 준비</li>
+        </ul>
+      </div>
+      <div class="ops-card">
+        <h3>운영 중 체크</h3>
+        <ul>
+          <li>검사는 "맞다/틀리다"가 아니라 "대화 소재"라는 점을 먼저 안내</li>
+          <li>한 명당 5~7분 내로 진행 (검사 1분 + 대화 2~3분 + 전달 1분)</li>
+          <li>깊은 고민을 꺼내는 경우, 전문기관 연계 안내(1388 등) 준비해두기</li>
+          <li>아이템 소진 시 바로 보충할 수 있도록 여분 챙기기</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const LOG_KEY = 'mindcard_log';
+const CARD_META = {
+  love:   { title:'나를 얼마나 사랑하고 있을까', color:'love',   emoji:'💗' },
+  stress: { title:'요즘 너무 지쳐있어',           color:'stress', emoji:'🔥' },
+  lonely: { title:'혼자인 것 같은 기분이 들어',     color:'lonely', emoji:'🌙' },
+  future: { title:'미래가 막막하고 불안해',         color:'future', emoji:'🌫️' },
+};
+const CARD_ORDER = ['love','stress','lonely','future'];
+
+function loadLocalLog(){
+  try{ return JSON.parse(localStorage.getItem(LOG_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+
+const isSupabaseConfigured = typeof SUPABASE_URL !== 'undefined' && !SUPABASE_URL.includes('YOUR_PROJECT');
+
+async function loadLog(){
+  if(!isSupabaseConfigured) return loadLocalLog();
+  try{
+    const res = await fetch(SUPABASE_URL + '/rest/v1/mindcard_log?select=*&order=created_at.desc&limit=1000', {
+      headers: { apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + SUPABASE_ANON_KEY },
+    });
+    if(!res.ok) throw new Error('supabase fetch failed');
+    const rows = await res.json();
+    return rows.map(r=>({
+      ts: new Date(r.created_at).getTime(),
+      cardId: r.card_id, cardTitle: r.card_title, typeKey: r.type_key, typeName: r.type_name,
+    })).reverse();
+  }catch(e){
+    console.warn('Supabase 조회 실패, 로컬 기록으로 대체합니다.', e);
+    return loadLocalLog();
+  }
+}
+
+async function render(){
+  const log = await loadLog();
+  document.getElementById('sourceNote').textContent = isSupabaseConfigured
+    ? '* Supabase에 저장된 전체 기기의 참여 기록입니다.'
+    : '* config.js에 Supabase 정보가 없어 이 브라우저(기기)에만 기록된 참여를 보여줍니다.';
+
+  // 상단 통계 타일
+  const top = document.getElementById('statsTop');
+  const totalTile = `<div class="stat-tile"><div class="num">${log.length}</div><div class="lbl">전체 참여</div></div>`;
+  const cardTiles = CARD_ORDER.map(id=>{
+    const count = log.filter(e=>e.cardId===id).length;
+    return `<div class="stat-tile" data-c="${CARD_META[id].color}"><div class="num">${count}</div><div class="lbl">${CARD_META[id].emoji} ${CARD_META[id].title}</div></div>`;
+  }).join('');
+  top.innerHTML = totalTile + cardTiles;
+
+  // 카드별 유형 분포
+  const bd = document.getElementById('breakdown');
+  bd.innerHTML = CARD_ORDER.map(id=>{
+    const entries = log.filter(e=>e.cardId===id);
+    const byType = {};
+    entries.forEach(e=>{ byType[e.typeName] = (byType[e.typeName]||0) + 1; });
+    const maxCount = Math.max(1, ...Object.values(byType));
+    const rows = Object.keys(byType).length
+      ? Object.entries(byType).sort((a,b)=>b[1]-a[1]).map(([name,count])=>`
+        <div class="bar-row">
+          <span class="bar-label">${name}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${(count/maxCount*100)}%"></div></div>
+          <span class="bar-count">${count}</span>
+        </div>`).join('')
+      : `<p style="color:var(--ink-faint);font-size:.82rem;margin:4px 0 0;">아직 참여 기록이 없어요</p>`;
+    return `<div class="bd-card" data-c="${CARD_META[id].color}">
+      <div class="bd-head"><span class="dot"></span><h3>${CARD_META[id].emoji} ${CARD_META[id].title}</h3></div>
+      ${rows}
+    </div>`;
+  }).join('');
+
+  // 최근 기록 테이블
+  const wrap = document.getElementById('recentWrap');
+  if(log.length === 0){
+    wrap.innerHTML = `<div class="empty-row">아직 참여 기록이 없어요. 부스에서 검사를 완료하면 여기에 쌓여요.</div>`;
+  } else {
+    const rows = log.slice(-30).reverse().map(e=>{
+      const d = new Date(e.ts);
+      const time = d.toLocaleString('ko-KR', {month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit'});
+      const meta = CARD_META[e.cardId] || {title:e.cardId, emoji:''};
+      return `<tr><td>${time}</td><td>${meta.emoji} ${meta.title}</td><td>${e.typeName}</td></tr>`;
+    }).join('');
+    wrap.innerHTML = `<table>
+      <tr><th>시간</th><th>카드</th><th>결과 유형</th></tr>
+      ${rows}
+    </table>`;
+  }
+}
+
+document.getElementById('resetBtn').addEventListener('click', async ()=>{
+  if(!confirm('모든 참여 기록을 초기화할까요? 이 작업은 되돌릴 수 없습니다.')) return;
+  localStorage.removeItem(LOG_KEY);
+  if(isSupabaseConfigured){
+    try{
+      await fetch(SUPABASE_URL + '/rest/v1/mindcard_log?id=gt.0', {
+        method: 'DELETE',
+        headers: { apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + SUPABASE_ANON_KEY },
+      });
+    }catch(e){ console.warn('Supabase 기록 삭제 실패', e); }
+  }
+  render();
+});
+
+document.getElementById('refreshBtn').addEventListener('click', render);
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+render();
+</script>
+</body>
+</html>

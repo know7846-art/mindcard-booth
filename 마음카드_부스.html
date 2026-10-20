@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>마음카드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<script src="config.js"></script>
+<style>
+:root{
+  --bg:#FAFAFC;
+  --surface:#FFFFFF;
+  --surface-2:#F3F1FB;
+  --ink:#1B2033;
+  --ink-soft:#5B6178;
+  --ink-faint:#8B90A8;
+  --primary:#F0577E;
+  --primary-soft:#FFEAF0;
+  --accent:#9B87F5;
+  --accent-soft:#F3EFFF;
+  --mint:#3FB8AC;
+  --mint-soft:#E3F7F4;
+  --amber:#DB9A34;
+  --amber-soft:#FFF4DE;
+  --border:#EFE5EC;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',sans-serif;line-height:1.6;}
+h1,h2,h3{font-family:'Gowun Dodum','Noto Sans KR',sans-serif;font-weight:400;margin:0;}
+.screen{display:none;min-height:100vh;padding:28px 18px 48px;max-width:560px;margin:0 auto;}
+.screen.active{display:block;}
+.eyebrow{font-size:.78rem;letter-spacing:.08em;color:var(--accent);font-weight:700;margin-bottom:6px;}
+
+/* ---- intro ---- */
+.intro-head{text-align:center;padding:18px 0 28px;}
+.intro-head h1{font-size:1.7rem;margin-bottom:10px;}
+.intro-head p{color:var(--ink-soft);font-size:.95rem;}
+.cardlist{display:flex;flex-direction:column;gap:14px;}
+.mindcard{
+  display:flex;align-items:center;gap:14px;padding:18px 16px;border-radius:18px;
+  border:1px solid var(--border);background:var(--surface);cursor:pointer;
+  transition:transform .15s,box-shadow .15s;text-align:left;width:100%;
+}
+.mindcard:active{transform:scale(.98);}
+.mindcard .emoji{font-size:1.9rem;flex-shrink:0;width:48px;height:48px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;background:var(--primary-soft);}
+.mindcard .txt b{display:block;font-size:1.05rem;color:var(--ink);margin-bottom:2px;}
+.mindcard .txt span{font-size:.84rem;color:var(--ink-soft);}
+.mindcard:nth-child(1) .emoji{background:var(--primary-soft);}
+.mindcard:nth-child(2) .emoji{background:var(--amber-soft);}
+.mindcard:nth-child(3) .emoji{background:var(--accent-soft);}
+.mindcard:nth-child(4) .emoji{background:var(--mint-soft);}
+.admin-link{display:block;text-align:center;margin-top:28px;font-size:.78rem;color:var(--ink-faint);text-decoration:none;}
+.admin-link:hover{color:var(--ink-soft);}
+
+/* ---- quiz ---- */
+.progress-wrap{display:flex;align-items:center;gap:10px;margin-bottom:22px;}
+.backbtn{background:none;border:none;color:var(--ink-faint);font-size:1.3rem;cursor:pointer;padding:4px 8px;}
+.progress-bar{flex:1;height:8px;border-radius:100px;background:var(--surface-2);overflow:hidden;}
+.progress-fill{height:100%;background:var(--primary);border-radius:100px;transition:width .3s;}
+.progress-num{font-size:.78rem;color:var(--ink-faint);flex-shrink:0;}
+.qtitle{font-size:1.25rem;margin-bottom:22px;line-height:1.5;}
+.opts{display:flex;flex-direction:column;gap:10px;}
+.opt{
+  text-align:left;padding:16px 16px;border-radius:14px;border:1.5px solid var(--border);
+  background:var(--surface);font-size:.98rem;color:var(--ink);cursor:pointer;
+}
+.opt:active{background:var(--primary-soft);border-color:var(--primary);}
+
+/* ---- result ---- */
+.result-emoji{font-size:3rem;text-align:center;margin-bottom:6px;}
+.result-type{text-align:center;font-size:1.5rem;margin-bottom:6px;}
+.result-sub{text-align:center;color:var(--ink-soft);font-size:.9rem;margin-bottom:22px;}
+.result-box{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:20px;margin-bottom:16px;}
+.result-box h3{font-size:.82rem;letter-spacing:.04em;color:var(--accent);margin-bottom:8px;}
+.result-box p{margin:0;color:var(--ink-soft);font-size:.95rem;}
+.talk-box{background:var(--accent-soft);border-radius:18px;padding:20px;margin-bottom:16px;}
+.talk-box h3{font-size:.82rem;letter-spacing:.04em;color:var(--accent);margin-bottom:8px;}
+.talk-box p{margin:0;color:var(--ink);font-size:1rem;font-weight:500;}
+.item-box{
+  display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,var(--primary-soft),var(--accent-soft));
+  border-radius:18px;padding:18px;margin-bottom:24px;
+}
+.item-box .emoji{font-size:2rem;}
+.item-box b{display:block;font-size:.78rem;color:var(--primary);letter-spacing:.04em;}
+.item-box span{font-size:1.05rem;color:var(--ink);font-weight:700;}
+.restart-btn{
+  display:block;width:100%;padding:15px;border-radius:14px;border:none;background:var(--ink);
+  color:#fff;font-size:1rem;font-weight:700;cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<!-- 화면 1: 마음카드 소개 -->
+<section class="screen active" id="screen-intro">
+  <div class="intro-head">
+    <span class="eyebrow">청년마음돌봄 부스</span>
+    <h1>오늘, 당신의 마음은<br>어디에 가까운가요?</h1>
+    <p>마음에 가장 가까운 카드를 하나 골라주세요.<br>짧은 체크 후 또래상담자와 이야기를 나눠요.</p>
+  </div>
+  <div class="cardlist" id="cardlist"></div>
+  <a href="admin.html" class="admin-link">관리자 페이지</a>
+</section>
+
+<!-- 화면 2: 검사 진행 -->
+<section class="screen" id="screen-quiz">
+  <div class="progress-wrap">
+    <button class="backbtn" id="backBtn">‹</button>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-num" id="progressNum"></div>
+  </div>
+  <h2 class="qtitle" id="qtitle"></h2>
+  <div class="opts" id="opts"></div>
+</section>
+
+<!-- 화면 3: 결과 -->
+<section class="screen" id="screen-result">
+  <div class="result-emoji" id="resultEmoji"></div>
+  <div class="eyebrow" style="text-align:center;" id="resultCardName"></div>
+  <h2 class="result-type" id="resultType"></h2>
+  <p class="result-sub" id="resultSub"></p>
+
+  <div class="result-box">
+    <h3>이런 모습일 수 있어요</h3>
+    <p id="resultDesc"></p>
+  </div>
+
+  <div class="talk-box">
+    <h3>또래상담자와 나눠볼 질문</h3>
+    <p id="resultTalk"></p>
+  </div>
+
+  <div class="item-box">
+    <span class="emoji" id="itemEmoji"></span>
+    <div><b>전달 아이템</b><span id="itemName"></span></div>
+  </div>
+
+  <button class="restart-btn" id="restartBtn">처음으로 돌아가기</button>
+</section>
+
+<script>
+const DATA = [
+  {
+    id:'love',
+    emoji:'💗',
+    title:'나를 얼마나 사랑하고 있을까',
+    desc:'자존감 · 자기수용',
+    item:{emoji:'💌', name:'응원카드'},
+    questions:[
+      {q:'실수를 했을 때 가장 먼저 드는 생각은?', opts:[
+        {t:'또 이렇게 망쳤네… 자책이 먼저 든다', type:'A'},
+        {t:'남들이 어떻게 봤을지 신경 쓰인다', type:'B'},
+        {t:'그럴 수도 있지, 다음엔 잘하자', type:'C'},
+        {t:'별생각 없이 그냥 넘어간다', type:'D'},
+      ]},
+      {q:'오늘 하루 애쓴 나에게 해주는 말은?', opts:[
+        {t:'이 정도로는 아직 부족해', type:'A'},
+        {t:'다른 사람들도 이만큼은 하지 않았을까', type:'B'},
+        {t:'오늘도 애썼어, 수고했어', type:'C'},
+        {t:'딱히 생각해본 적 없다', type:'D'},
+      ]},
+      {q:'SNS에서 다른 사람의 성취를 보면?', opts:[
+        {t:'나는 왜 저만큼 못했을까 비교하게 된다', type:'A'},
+        {t:'저 사람처럼 보이고 싶다는 생각이 든다', type:'B'},
+        {t:'멋지다, 나는 내 속도로 가면 된다', type:'C'},
+        {t:'별 감정 없이 그냥 스크롤한다', type:'D'},
+      ]},
+      {q:'힘든 일이 있을 때 나는?', opts:[
+        {t:'더 열심히 해서 증명하려 한다', type:'A'},
+        {t:'주변에 맞춰서 괜찮은 척한다', type:'B'},
+        {t:'쉬어가도 된다고 스스로 다독인다', type:'C'},
+        {t:'그냥 참고 넘긴다, 특별히 돌보지 않는다', type:'D'},
+      ]},
+      {q:'거울 속 나를 보면 드는 느낌은?', opts:[
+        {t:'더 고쳐야 할 점이 먼저 보인다', type:'A'},
+        {t:'남들에게 어떻게 비칠지 궁금하다', type:'B'},
+        {t:'있는 그대로 괜찮다는 느낌', type:'C'},
+        {t:'별생각 없이 지나친다', type:'D'},
+      ]},
+      {q:'나에게 선물을 하나 준다면?', opts:[
+        {t:'더 나아지기 위한 것 (자기계발류)', type:'A'},
+        {t:'남들이 좋아할 만한 것', type:'B'},
+        {t:'내가 진짜 원하는 것', type:'C'},
+        {t:'딱히 떠오르는 게 없다', type:'D'},
+      ]},
+    ],
+    results:{
+      A:{emoji:'🪞', name:'엄격한 코치형', sub:'나에게 너무 높은 기준을 들이대고 있어요', desc:'스스로에게 유독 엄격한 편이에요. 더 잘해야 한다는 기준이 늘 먼저 떠오르고, 잘한 것보다 부족한 부분이 먼저 눈에 들어와요. 그만큼 열심히 살아왔다는 뜻이기도 해요.', talk:'"요즘 나 자신한테 가장 많이 하는 말이 뭐예요?" 로 대화를 시작해보세요.'},
+      B:{emoji:'🔍', name:'눈치보는 거울형', sub:'내 기준보다 남의 시선이 먼저 떠올라요', desc:'나를 볼 때 다른 사람의 시선을 먼저 떠올리는 편이에요. 맞춰주려 애쓰다 보니 정작 내가 뭘 원하는지는 뒤로 밀려나곤 해요.', talk:'"다른 사람 시선 말고, 진짜 내가 원하는 건 뭐예요?" 로 물어봐주세요.'},
+      C:{emoji:'🌿', name:'다정한 친구형', sub:'이미 자신을 꽤 잘 돌보고 있어요', desc:'스스로에게 너그럽고, 실수해도 다시 일어설 힘을 믿는 편이에요. 지금처럼 자신을 다정하게 대하는 태도를 계속 지켜가도 좋아요.', talk:'"요즘 스스로를 잘 돌본 순간이 있었다면?" 을 함께 떠올려보세요.'},
+      D:{emoji:'🌫️', name:'무심한 방관자형', sub:'나를 잘 돌보지 않고 지나치고 있어요', desc:'나에 대한 생각 자체를 잘 안 하는 편이에요. 괜찮아서가 아니라, 나를 챙길 여유나 습관이 없었던 걸 수도 있어요.', talk:'"오늘 하루, 나를 위해 한 게 있다면 뭐예요?" 로 가볍게 물어봐주세요.'},
+    }
+  },
+  {
+    id:'stress',
+    emoji:'🔥',
+    title:'요즘 너무 지쳐있어',
+    desc:'스트레스 · 번아웃',
+    item:{emoji:'🟣', name:'스트레스볼'},
+    questions:[
+      {q:'요즘 가장 많이 드는 생각은?', opts:[
+        {t:'해야 할 일이 너무 많다', type:'A'},
+        {t:'그냥 참고 넘기자', type:'B'},
+        {t:'아무것도 하고 싶지 않다', type:'C'},
+        {t:'별것도 아닌데 왜 이렇게 신경 쓰이지', type:'D'},
+      ]},
+      {q:'스트레스를 받으면 나타나는 반응은?', opts:[
+        {t:'계속 뭔가 해야 할 것 같은 압박감', type:'A'},
+        {t:'말을 안 하게 되고 속으로 삭힌다', type:'B'},
+        {t:'몸이 무겁고 눕고만 싶다', type:'C'},
+        {t:'심장이 빨리 뛰거나 신경이 곤두선다', type:'D'},
+      ]},
+      {q:'주말에 쉬어도?', opts:[
+        {t:'다음 할 일 생각에 못 쉰다', type:'A'},
+        {t:'쉬면서도 눈치가 보여 완전히 못 쉰다', type:'B'},
+        {t:'쉬어도 피곤이 안 풀린다', type:'C'},
+        {t:'조용한 곳에서도 괜히 긴장된다', type:'D'},
+      ]},
+      {q:'요즘 나를 가장 지치게 하는 건?', opts:[
+        {t:'끝없는 할 일과 일정', type:'A'},
+        {t:'참아야 하는 관계나 상황', type:'B'},
+        {t:'아무 의욕이 없는 상태 자체', type:'C'},
+        {t:'작은 일에도 신경이 쓰이는 것', type:'D'},
+      ]},
+      {q:'주변 사람이 말을 걸면?', opts:[
+        {t:'할 일 생각에 집중이 잘 안 된다', type:'A'},
+        {t:'괜찮은 척 받아준다', type:'B'},
+        {t:'반응할 힘이 별로 없다', type:'C'},
+        {t:'괜히 예민하게 반응하게 된다', type:'D'},
+      ]},
+      {q:'지금 가장 필요한 건?', opts:[
+        {t:'할 일을 좀 줄이는 것', type:'A'},
+        {t:'솔직하게 털어놓을 사람', type:'B'},
+        {t:'아무것도 안 하는 시간', type:'C'},
+        {t:'자극이 적은 조용한 환경', type:'D'},
+      ]},
+    ],
+    results:{
+      A:{emoji:'⚙️', name:'과열형', sub:'할 일이 쌓여 쉴 틈 없이 달려왔어요', desc:'해야 할 일 생각이 머릿속을 떠나지 않는 상태예요. 쉬는 순간에도 다음 일이 떠올라 진짜 쉼이 어려웠을 거예요.', talk:'"요즘 할 일 목록에서 하나만 빼도 된다면 뭘 뺄래요?" 로 물어봐주세요.'},
+      B:{emoji:'🫧', name:'억눌림형', sub:'참는 게 습관이 되어버렸어요', desc:'불편하거나 힘든 걸 표현하기보다 속으로 삭이는 편이에요. 괜찮아 보이지만 쌓인 게 많을 수 있어요.', talk:'"요즘 참고 있는 말이 있다면 뭐예요?" 로 조심스럽게 물어봐주세요.'},
+      C:{emoji:'🔋', name:'방전형', sub:'에너지가 다 소진된 상태예요', desc:'의욕이 없는 건 게을러서가 아니라, 이미 많이 쓴 에너지가 채워지지 않은 상태예요. 지금은 회복이 먼저예요.', talk:'"요즘 조금이라도 힘이 났던 순간이 있었어요?" 로 가볍게 물어봐주세요.'},
+      D:{emoji:'⚡', name:'예민형', sub:'작은 자극에도 긴장이 쌓여 있어요', desc:'신경이 곤두서 있어서 평소라면 넘겼을 일에도 쉽게 반응하게 돼요. 몸과 마음이 계속 경계 상태인 거예요.', talk:'"요즘 유난히 신경 쓰이는 게 뭐예요?" 로 대화를 열어보세요.'},
+    }
+  },
+  {
+    id:'lonely',
+    emoji:'🌙',
+    title:'혼자인 것 같은 기분이 들어',
+    desc:'외로움 · 고립감',
+    item:{emoji:'🧿', name:'응원 부적'},
+    questions:[
+      {q:'사람들과 있어도 드는 느낌은?', opts:[
+        {t:'웃고 있어도 혼자인 느낌이 든다', type:'A'},
+        {t:'요즘 만나는 사람이 거의 없다', type:'B'},
+        {t:'끼어 있어도 어딘가 겉도는 느낌', type:'C'},
+        {t:'예전엔 있었는데 지금 없는 사람이 떠오른다', type:'D'},
+      ]},
+      {q:'힘든 일이 생기면?', opts:[
+        {t:'주변에 사람은 있어도 말할 사람이 없다', type:'A'},
+        {t:'연락할 사람이 딱히 없다', type:'B'},
+        {t:'말해도 이해 못 할 것 같다', type:'C'},
+        {t:'그 사람이었다면 어땠을까 생각난다', type:'D'},
+      ]},
+      {q:'요즘 연락을 주고받는 정도는?', opts:[
+        {t:'많지만 깊은 대화는 없다', type:'A'},
+        {t:'거의 없다', type:'B'},
+        {t:'있지만 나는 주변인 같다', type:'C'},
+        {t:'예전보다 확 줄었다', type:'D'},
+      ]},
+      {q:'혼자 있을 때 드는 생각은?', opts:[
+        {t:'사람들 속에서도 비슷한 외로움을 느낀다', type:'A'},
+        {t:'혼자인 게 이제는 익숙해졌다', type:'B'},
+        {t:'나만 빼고 다 잘 지내는 것 같다', type:'C'},
+        {t:'그 사람, 그 시절이 그립다', type:'D'},
+      ]},
+      {q:'SNS를 볼 때?', opts:[
+        {t:'함께 있어도 공감받지 못한 기분이 든다', type:'A'},
+        {t:'보는 것도 점점 줄었다', type:'B'},
+        {t:'나만 그 모임에 없는 것 같다', type:'C'},
+        {t:'예전 추억이 자꾸 떠오른다', type:'D'},
+      ]},
+      {q:'지금 가장 그리운 건?', opts:[
+        {t:'진짜 내 얘기를 들어줄 사람', type:'A'},
+        {t:'그냥 누군가와의 연결 자체', type:'B'},
+        {t:'자연스럽게 낄 수 있는 자리', type:'C'},
+        {t:'예전의 특정 관계나 사람', type:'D'},
+      ]},
+    ],
+    results:{
+      A:{emoji:'🎭', name:'군중 속 고립형', sub:'사람 속에 있어도 혼자 같은 느낌이에요', desc:'관계는 있지만 진짜 내 얘기를 나눌 사람은 없다고 느끼는 상태예요. 겉으로는 잘 지내는 것처럼 보일 수 있어요.', talk:'"사람은 많은데 진짜 얘기할 사람은 누구예요?" 로 물어봐주세요.'},
+      B:{emoji:'🏠', name:'단절형', sub:'관계 자체가 많이 줄어든 상태예요', desc:'연락하고 만나는 관계 자체가 줄어든 상태예요. 혼자가 익숙해졌지만, 그만큼 연결이 그리운 순간도 있을 거예요.', talk:'"요즘 누구랑 가장 자주 연락해요?" 로 가볍게 시작해보세요.'},
+      C:{emoji:'🚪', name:'소외형', sub:'자리에 있어도 낄 곳이 없다고 느껴요', desc:'모임이나 관계 안에 있어도 내 자리가 아닌 것 같은 느낌이 드는 상태예요. 소속감이 부족하게 느껴질 수 있어요.', talk:'"어디에 있을 때 가장 나답게 느껴져요?" 로 물어봐주세요.'},
+      D:{emoji:'🍃', name:'그리움형', sub:'특정한 사람이나 관계의 부재가 커요', desc:'지금 상황보다, 예전에 있던 어떤 사람·관계의 부재가 외로움의 중심인 상태예요. 그 관계가 남긴 자리가 클 수 있어요.', talk:'"요즘 가장 그리운 사람이 있다면 누구예요?" 로 물어봐주세요.'},
+    }
+  },
+  {
+    id:'future',
+    emoji:'🌫️',
+    title:'미래가 막막하고 불안해',
+    desc:'진로 · 미래 불안',
+    item:{emoji:'📜', name:'다짐카드'},
+    questions:[
+      {q:'미래를 생각하면 드는 느낌은?', opts:[
+        {t:'남들은 다 앞서가는 것 같다', type:'A'},
+        {t:'뭘 해야 할지 전혀 모르겠다', type:'B'},
+        {t:'실패할까봐 시작이 두렵다', type:'C'},
+        {t:'생각만 해도 피하고 싶다', type:'D'},
+      ]},
+      {q:'또래들 얘기를 들으면?', opts:[
+        {t:'나만 뒤처진 것 같다', type:'A'},
+        {t:'다들 확신이 있어 보여서 부럽다', type:'B'},
+        {t:'나도 저렇게 돼야 하나 압박이 든다', type:'C'},
+        {t:'듣고 나면 더 지친다', type:'D'},
+      ]},
+      {q:'계획을 세우려 하면?', opts:[
+        {t:'남들 속도에 맞춰야 할 것 같다', type:'A'},
+        {t:'뭐부터 해야 할지 막막하다', type:'B'},
+        {t:'틀린 선택일까 걱정돼 못 정한다', type:'C'},
+        {t:'계획 자체를 생각하기 싫다', type:'D'},
+      ]},
+      {q:'실패를 떠올리면?', opts:[
+        {t:'남들보다 못할까봐 걱정된다', type:'A'},
+        {t:'어디로 가야 할지 몰라서 불안하다', type:'B'},
+        {t:'다시 못 일어날까봐 두렵다', type:'C'},
+        {t:'실패든 뭐든 그냥 피하고 싶다', type:'D'},
+      ]},
+      {q:'지금 기분과 가장 가까운 건?', opts:[
+        {t:'조급함', type:'A'},
+        {t:'방향을 잃은 느낌', type:'B'},
+        {t:'두려움', type:'C'},
+        {t:'무기력함', type:'D'},
+      ]},
+      {q:'지금 가장 필요한 건?', opts:[
+        {t:'내 속도를 인정받는 것', type:'A'},
+        {t:'작은 방향이라도 찾는 것', type:'B'},
+        {t:'실패해도 괜찮다는 말', type:'C'},
+        {t:'잠깐 쉬어도 된다는 허락', type:'D'},
+      ]},
+    ],
+    results:{
+      A:{emoji:'🏃', name:'비교형', sub:'남들의 속도에 나를 자꾸 맞추게 돼요', desc:'내 속도보다 남들의 속도가 기준이 되어버린 상태예요. 비교하다 보면 지금의 나는 늘 부족해 보일 수 있어요.', talk:'"요즘 누구랑 자꾸 나를 비교하게 돼요?" 로 물어봐주세요.'},
+      B:{emoji:'🧭', name:'길없음형', sub:'방향 자체가 보이지 않는 상태예요', desc:'뭘 해야 할지 몰라서 막막한 상태예요. 방향이 없다는 건 틀렸다는 뜻이 아니라, 아직 못 찾았다는 뜻이에요.', talk:'"요즘 조금이라도 관심이 가는 게 있다면 뭐예요?" 로 물어봐주세요.'},
+      C:{emoji:'🛡️', name:'완벽압박형', sub:'실패에 대한 두려움이 시작을 막고 있어요', desc:'틀릴까봐, 실패할까봐 시작 자체가 어려운 상태예요. 완벽하게 하려는 마음이 오히려 발을 묶고 있을 수 있어요.', talk:'"작게 시도해볼 수 있는 한 가지가 있다면?" 으로 물어봐주세요.'},
+      D:{emoji:'💤', name:'무기력형', sub:'생각만 해도 지쳐서 피하게 돼요', desc:'미래 생각 자체가 버거워서 자꾸 미루거나 피하게 되는 상태예요. 지금은 몰아붙이기보다 잠깐의 쉼이 필요해요.', talk:'"요즘 아무 생각 없이 쉰 적이 있어요?" 로 가볍게 물어봐주세요.'},
+    }
+  },
+];
+
+let current = null; // test object
+let qIndex = 0;
+let tally = {};
+
+const screens = {
+  intro: document.getElementById('screen-intro'),
+  quiz: document.getElementById('screen-quiz'),
+  result: document.getElementById('screen-result'),
+};
+function showScreen(name){
+  Object.values(screens).forEach(s=>s.classList.remove('active'));
+  screens[name].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function renderIntro(){
+  const list = document.getElementById('cardlist');
+  list.innerHTML = '';
+  DATA.forEach(test=>{
+    const btn = document.createElement('button');
+    btn.className = 'mindcard';
+    btn.innerHTML = `<span class="emoji">${test.emoji}</span><span class="txt"><b>${test.title}</b><span>${test.desc}</span></span>`;
+    btn.addEventListener('click', ()=> startTest(test));
+    list.appendChild(btn);
+  });
+}
+
+function startTest(test){
+  current = test;
+  qIndex = 0;
+  tally = {A:0,B:0,C:0,D:0};
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q = current.questions[qIndex];
+  document.getElementById('qtitle').textContent = q.q;
+  document.getElementById('progressNum').textContent = (qIndex+1) + ' / ' + current.questions.length;
+  document.getElementById('progressFill').style.width = ((qIndex)/current.questions.length*100) + '%';
+
+  const opts = document.getElementById('opts');
+  opts.innerHTML = '';
+  q.opts.forEach(o=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.textContent = o.t;
+    btn.addEventListener('click', ()=> selectOption(o.type));
+    opts.appendChild(btn);
+  });
+}
+
+function selectOption(type){
+  tally[type] = (tally[type]||0) + 1;
+  qIndex++;
+  if(qIndex >= current.questions.length){
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+document.getElementById('backBtn').addEventListener('click', ()=>{
+  if(qIndex === 0){
+    showScreen('intro');
+  } else {
+    qIndex--;
+    renderQuestion();
+  }
+});
+
+const LOG_KEY = 'mindcard_log';
+function logCompletion(cardId, cardTitle, typeKey, typeName){
+  // 오프라인/연결 실패 대비용 로컬 백업
+  try{
+    const log = JSON.parse(localStorage.getItem(LOG_KEY) || '[]');
+    log.push({ ts: Date.now(), cardId, cardTitle, typeKey, typeName });
+    localStorage.setItem(LOG_KEY, JSON.stringify(log));
+  }catch(e){ /* storage unavailable, skip */ }
+
+  // Supabase에 기록 전송 (설정돼 있을 때만)
+  if(typeof SUPABASE_URL !== 'undefined' && !SUPABASE_URL.includes('YOUR_PROJECT')){
+    fetch(SUPABASE_URL + '/rest/v1/mindcard_log', {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: 'Bearer ' + SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({ card_id: cardId, card_title: cardTitle, type_key: typeKey, type_name: typeName }),
+    }).catch(()=>{ /* 네트워크 실패해도 로컬 백업은 남아있음 */ });
+  }
+}
+
+function showResult(){
+  let best = 'A', max = -1;
+  ['A','B','C','D'].forEach(k=>{ if(tally[k] > max){ max = tally[k]; best = k; } });
+  const r = current.results[best];
+  logCompletion(current.id, current.title, best, r.name);
+
+  document.getElementById('resultEmoji').textContent = r.emoji;
+  document.getElementById('resultCardName').textContent = current.title;
+  document.getElementById('resultType').textContent = r.name;
+  document.getElementById('resultSub').textContent = r.sub;
+  document.getElementById('resultDesc').textContent = r.desc;
+  document.getElementById('resultTalk').textContent = r.talk;
+  document.getElementById('itemEmoji').textContent = current.item.emoji;
+  document.getElementById('itemName').textContent = current.item.name;
+
+  document.getElementById('progressFill').style.width = '100%';
+  showScreen('result');
+}
+
+document.getElementById('restartBtn').addEventListener('click', ()=>{
+  current = null;
+  showScreen('intro');
+});
+
+renderIntro();
+</script>
+</body>
+</html>
