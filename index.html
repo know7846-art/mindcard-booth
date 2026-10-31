@@ -73,9 +73,18 @@ h1,h2,h3{font-family:'Gowun Dodum','Noto Sans KR',sans-serif;font-weight:400;mar
 .result-box{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:20px;margin-bottom:16px;}
 .result-box h3{font-size:.82rem;letter-spacing:.04em;color:var(--accent);margin-bottom:8px;}
 .result-box p{margin:0;color:var(--ink-soft);font-size:.95rem;}
-.talk-box{background:var(--accent-soft);border-radius:18px;padding:20px;margin-bottom:16px;}
-.talk-box h3{font-size:.82rem;letter-spacing:.04em;color:var(--accent);margin-bottom:8px;}
-.talk-box p{margin:0;color:var(--ink);font-size:1rem;font-weight:500;}
+.type-overview-box{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px 20px;margin-bottom:16px;}
+.type-overview-box h3{font-size:.82rem;letter-spacing:.04em;color:var(--accent);margin-bottom:10px;}
+.to-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-top:1px solid var(--border);}
+.to-row:first-child{border-top:none;padding-top:0;}
+.to-emoji{font-size:1.15rem;flex-shrink:0;}
+.to-text{flex:1;min-width:0;}
+.to-name{display:block;font-size:.88rem;font-weight:600;color:var(--ink-soft);}
+.to-sub{display:block;font-size:.78rem;color:var(--ink-faint);margin-top:1px;}
+.to-row.current{background:var(--primary-soft);border-radius:12px;margin:0 -10px;padding:10px;border-top:none;}
+.to-row.current + .to-row{border-top:none;}
+.to-row.current .to-name{color:var(--primary);font-weight:700;}
+.to-row.current .to-sub{color:var(--ink);}
 .item-box{margin-bottom:24px;}
 .item-reveal-btn{
   display:flex;align-items:center;gap:12px;width:100%;
@@ -131,6 +140,11 @@ h1,h2,h3{font-family:'Gowun Dodum','Noto Sans KR',sans-serif;font-weight:400;mar
   <div class="result-box">
     <h3>이런 모습일 수 있어요</h3>
     <p id="resultDesc"></p>
+  </div>
+
+  <div class="type-overview-box">
+    <h3>이 카드엔 이런 네 가지 유형이 있어요</h3>
+    <div id="typeOverviewList"></div>
   </div>
 
   <div class="item-box">
@@ -195,9 +209,9 @@ const DATA = [
     ],
     results:{
       A:{emoji:'🪞', name:'엄격한 코치형', sub:'나에게 너무 높은 기준을 들이대고 있어요', desc:'스스로에게 유독 엄격한 편이에요. 더 잘해야 한다는 기준이 늘 먼저 떠오르고, 잘한 것보다 부족한 부분이 먼저 눈에 들어와요. 그만큼 열심히 살아왔다는 뜻이기도 해요. 그 기준 때문에 스스로를 다그치는 날이 많았을 수도 있어요.', talk:'"요즘 나 자신한테 가장 많이 하는 말이 뭐예요?" 로 대화를 시작해보세요.'},
-      B:{emoji:'🔍', name:'눈치보는 거울형', sub:'내 기준보다 남의 시선이 먼저 떠올라요', desc:'나를 볼 때 다른 사람의 시선을 먼저 떠올리는 편이에요. 맞춰주려 애쓰다 보니 정작 내가 뭘 원하는지는 뒤로 밀려나곤 해요. 그렇게 지내다 보면 정말 내가 좋아하는 게 뭔지조차 가끔 헷갈릴 때가 있을 거예요.', talk:'"다른 사람 시선 말고, 진짜 내가 원하는 건 뭐예요?" 로 물어봐주세요.'},
+      B:{emoji:'🔍', name:'눈치보는 거울형', sub:'내 기준보다 남의 시선이 먼저 떠올라요', desc:'나를 볼 때 다른 사람의 시선을 먼저 떠올리는 편이에요. 맞춰주려 애쓰다 보니 정작 내가 뭘 원하는지는 뒤로 밀려나곤 해요. 그만큼 주변을 세심하게 살피고 배려할 줄 아는 사람이라는 뜻이기도 해요.', talk:'"다른 사람 시선 말고, 진짜 내가 원하는 건 뭐예요?" 로 물어봐주세요.'},
       C:{emoji:'🌿', name:'다정한 친구형', sub:'이미 자신을 꽤 잘 돌보고 있어요', desc:'스스로에게 너그럽고, 실수해도 다시 일어설 힘을 믿는 편이에요. 넘어져도 자신을 탓하기보다 다음을 생각할 수 있는 건 쉽게 가지기 어려운 힘이에요. 지금처럼 자신을 다정하게 대하는 태도를 계속 지켜가도 좋아요.', talk:'"요즘 스스로를 잘 돌본 순간이 있었다면?" 을 함께 떠올려보세요.'},
-      D:{emoji:'🌫️', name:'무심한 방관자형', sub:'나를 잘 돌보지 않고 지나치고 있어요', desc:'나에 대한 생각 자체를 잘 안 하는 편이에요. 괜찮아서가 아니라, 나를 챙길 여유나 습관이 없었던 걸 수도 있어요. 다른 걸 챙기는 데 익숙해지다 보니, 정작 나를 돌아보는 시간은 자연스럽게 뒤로 밀려났을 거예요.', talk:'"오늘 하루, 나를 위해 한 게 있다면 뭐예요?" 로 가볍게 물어봐주세요.'},
+      D:{emoji:'🌫️', name:'무심한 방관자형', sub:'나를 잘 돌보지 않고 지나치고 있어요', desc:'나에 대한 생각 자체를 잘 안 하는 편이에요. 괜찮아서가 아니라, 나를 챙길 여유나 습관이 없었던 걸 수도 있어요. 다른 걸 챙기는 데 익숙해지다 보니, 정작 나를 돌아보는 시간은 자연스럽게 뒤로 밀려났을 거예요. 작은 일에 크게 흔들리지 않는 것도 나름의 단단함일 수 있어요.', talk:'"오늘 하루, 나를 위해 한 게 있다면 뭐예요?" 로 가볍게 물어봐주세요.'},
     }
   },
   {
@@ -245,10 +259,10 @@ const DATA = [
       ]},
     ],
     results:{
-      A:{emoji:'⚙️', name:'과열형', sub:'할 일이 쌓여 쉴 틈 없이 달려왔어요', desc:'해야 할 일 생각이 머릿속을 떠나지 않는 상태예요. 쉬는 순간에도 다음 일이 떠올라 진짜 쉼이 어려웠을 거예요. 몸은 멈춰 있어도 마음은 계속 일하고 있었던 셈이라, 피로가 쉽게 풀리지 않았을 수 있어요.', talk:'"요즘 할 일 목록에서 하나만 빼도 된다면 뭘 뺄래요?" 로 물어봐주세요.'},
+      A:{emoji:'⚙️', name:'과열형', sub:'할 일이 쌓여 쉴 틈 없이 달려왔어요', desc:'해야 할 일 생각이 머릿속을 떠나지 않는 상태예요. 쉬는 순간에도 다음 일이 떠올라 진짜 쉼이 어려웠을 거예요. 몸은 멈춰 있어도 마음은 계속 일하고 있었던 셈이라, 피로가 쉽게 풀리지 않았을 수 있어요. 그만큼 책임감 있게 해내려는 마음이 크다는 뜻이기도 해요.', talk:'"요즘 할 일 목록에서 하나만 빼도 된다면 뭘 뺄래요?" 로 물어봐주세요.'},
       B:{emoji:'🫧', name:'억눌림형', sub:'참는 게 습관이 되어버렸어요', desc:'불편하거나 힘든 걸 표현하기보다 속으로 삭이는 편이에요. 괜찮아 보이지만 쌓인 게 많을 수 있어요. 겉으로 티를 안 내다 보니 주변에서는 잘 모를 수 있지만, 혼자 감당해온 무게는 가볍지 않았을 거예요.', talk:'"요즘 참고 있는 말이 있다면 뭐예요?" 로 조심스럽게 물어봐주세요.'},
       C:{emoji:'🔋', name:'방전형', sub:'에너지가 다 소진된 상태예요', desc:'의욕이 없는 건 게을러서가 아니라, 이미 많이 쓴 에너지가 채워지지 않은 상태예요. 쓸 수 있는 힘을 다 써버린 뒤라 아무것도 하고 싶지 않은 게 당연한 거예요. 지금은 뭔가를 해내기보다 회복이 먼저예요.', talk:'"요즘 조금이라도 힘이 났던 순간이 있었어요?" 로 가볍게 물어봐주세요.'},
-      D:{emoji:'⚡', name:'예민형', sub:'작은 자극에도 긴장이 쌓여 있어요', desc:'신경이 곤두서 있어서 평소라면 넘겼을 일에도 쉽게 반응하게 돼요. 몸과 마음이 계속 경계 상태인 거예요. 작은 자극에도 유난히 예민해지는 게 성격 탓이 아니라, 긴장이 오래 쌓여온 결과일 수 있어요.', talk:'"요즘 유난히 신경 쓰이는 게 뭐예요?" 로 대화를 열어보세요.'},
+      D:{emoji:'⚡', name:'예민형', sub:'작은 자극에도 긴장이 쌓여 있어요', desc:'신경이 곤두서 있어서 평소라면 넘겼을 일에도 쉽게 반응하게 돼요. 몸과 마음이 계속 경계 상태인 거예요. 작은 자극에도 유난히 예민해지는 게 성격 탓이 아니라, 긴장이 오래 쌓여온 결과일 수 있어요. 주변의 변화를 빠르게 알아차리는 섬세함이 있다는 뜻이기도 해요.', talk:'"요즘 유난히 신경 쓰이는 게 뭐예요?" 로 대화를 열어보세요.'},
     }
   },
   {
@@ -297,8 +311,8 @@ const DATA = [
     ],
     results:{
       A:{emoji:'🎭', name:'군중 속 고립형', sub:'사람 속에 있어도 혼자 같은 느낌이에요', desc:'관계는 있지만 진짜 내 얘기를 나눌 사람은 없다고 느끼는 상태예요. 겉으로는 잘 지내는 것처럼 보일 수 있어요. 사람들 속에 있어도 마음 한편은 혼자인 것처럼 느껴져서, 그 틈을 아무도 모르게 혼자 견뎌왔을 거예요.', talk:'"사람은 많은데 진짜 얘기할 사람은 누구예요?" 로 물어봐주세요.'},
-      B:{emoji:'🏠', name:'단절형', sub:'관계 자체가 많이 줄어든 상태예요', desc:'연락하고 만나는 관계 자체가 줄어든 상태예요. 혼자가 익숙해졌지만, 그만큼 연결이 그리운 순간도 있을 거예요. 편해서 멀어진 걸 수도 있고, 멀어져서 편해진 걸 수도 있어서, 그 이유는 본인만 알고 있을 거예요.', talk:'"요즘 누구랑 가장 자주 연락해요?" 로 가볍게 시작해보세요.'},
-      C:{emoji:'🚪', name:'소외형', sub:'자리에 있어도 낄 곳이 없다고 느껴요', desc:'모임이나 관계 안에 있어도 내 자리가 아닌 것 같은 느낌이 드는 상태예요. 소속감이 부족하게 느껴질 수 있어요. 함께 있는데도 혼자 겉도는 느낌이 들 때, 그 자리를 애써 지키고 있었던 걸 수도 있어요.', talk:'"어디에 있을 때 가장 나답게 느껴져요?" 로 물어봐주세요.'},
+      B:{emoji:'🏠', name:'단절형', sub:'관계 자체가 많이 줄어든 상태예요', desc:'연락하고 만나는 관계 자체가 줄어든 상태예요. 혼자가 익숙해졌지만, 그만큼 연결이 그리운 순간도 있을 거예요. 편해서 멀어진 걸 수도 있고, 멀어져서 편해진 걸 수도 있어서, 그 이유는 본인만 알고 있을 거예요. 혼자서도 자신의 시간을 잘 꾸려올 수 있었다는 뜻이기도 해요.', talk:'"요즘 누구랑 가장 자주 연락해요?" 로 가볍게 시작해보세요.'},
+      C:{emoji:'🚪', name:'소외형', sub:'자리에 있어도 낄 곳이 없다고 느껴요', desc:'모임이나 관계 안에 있어도 내 자리가 아닌 것 같은 느낌이 드는 상태예요. 소속감이 부족하게 느껴질 수 있어요. 함께 있는데도 혼자 겉도는 느낌이 들 때, 그 자리를 애써 지키고 있었던 걸 수도 있어요. 쉽게 자리를 떠나지 않고 꾸준히 지켜온 것도 분명한 노력이에요.', talk:'"어디에 있을 때 가장 나답게 느껴져요?" 로 물어봐주세요.'},
       D:{emoji:'🍃', name:'그리움형', sub:'특정한 사람이나 관계의 부재가 커요', desc:'지금 상황보다, 예전에 있던 어떤 사람·관계의 부재가 외로움의 중심인 상태예요. 그 관계가 남긴 자리가 커서, 다른 무언가로도 잘 채워지지 않았을 거예요. 그만큼 그 사람, 그 시간이 소중했다는 뜻이기도 해요.', talk:'"요즘 가장 그리운 사람이 있다면 누구예요?" 로 물어봐주세요.'},
     }
   },
@@ -347,10 +361,10 @@ const DATA = [
       ]},
     ],
     results:{
-      A:{emoji:'🏃', name:'비교형', sub:'남들의 속도에 나를 자꾸 맞추게 돼요', desc:'내 속도보다 남들의 속도가 기준이 되어버린 상태예요. 비교하다 보면 지금의 나는 늘 부족해 보일 수 있어요. 남들과 나란히 놓고 보는 습관이 반복되다 보니, 내가 쌓아온 속도와 방향은 잘 보이지 않았을 거예요.', talk:'"요즘 누구랑 자꾸 나를 비교하게 돼요?" 로 물어봐주세요.'},
+      A:{emoji:'🏃', name:'비교형', sub:'남들의 속도에 나를 자꾸 맞추게 돼요', desc:'내 속도보다 남들의 속도가 기준이 되어버린 상태예요. 비교하다 보면 지금의 나는 늘 부족해 보일 수 있어요. 남들과 나란히 놓고 보는 습관이 반복되다 보니, 내가 쌓아온 속도와 방향은 잘 보이지 않았을 거예요. 그만큼 더 잘하고 싶은 마음이 크다는 뜻이기도 해요.', talk:'"요즘 누구랑 자꾸 나를 비교하게 돼요?" 로 물어봐주세요.'},
       B:{emoji:'🧭', name:'길없음형', sub:'방향 자체가 보이지 않는 상태예요', desc:'뭘 해야 할지 몰라서 막막한 상태예요. 방향이 없다는 건 틀렸다는 뜻이 아니라, 아직 못 찾았다는 뜻이에요. 지금 당장 답이 없어도, 그 막막함 속에서도 계속 고민하고 있다는 것 자체가 이미 나아가고 있는 거예요.', talk:'"요즘 조금이라도 관심이 가는 게 있다면 뭐예요?" 로 물어봐주세요.'},
-      C:{emoji:'🛡️', name:'완벽압박형', sub:'실패에 대한 두려움이 시작을 막고 있어요', desc:'틀릴까봐, 실패할까봐 시작 자체가 어려운 상태예요. 완벽하게 하려는 마음이 오히려 발을 묶고 있을 수 있어요. 잘 해내고 싶은 마음이 큰 만큼, 작은 실수도 크게 느껴져서 선뜩 발을 떼기 어려웠을 거예요.', talk:'"작게 시도해볼 수 있는 한 가지가 있다면?" 으로 물어봐주세요.'},
-      D:{emoji:'💤', name:'무기력형', sub:'생각만 해도 지쳐서 피하게 돼요', desc:'미래 생각 자체가 버거워서 자꾸 미루거나 피하게 되는 상태예요. 생각만 해도 지치는 건 게을러서가 아니라, 이미 마음의 여력이 많이 소진됐다는 신호일 수 있어요. 지금은 몰아붙이기보다 잠깐의 쉼이 필요해요.', talk:'"요즘 아무 생각 없이 쉰 적이 있어요?" 로 가볍게 물어봐주세요.'},
+      C:{emoji:'🛡️', name:'완벽압박형', sub:'실패에 대한 두려움이 시작을 막고 있어요', desc:'틀릴까봐, 실패할까봐 시작 자체가 어려운 상태예요. 완벽하게 하려는 마음이 오히려 발을 묶고 있을 수 있어요. 잘 해내고 싶은 마음이 큰 만큼, 작은 실수도 크게 느껴져서 선뜩 발을 떼기 어려웠을 거예요. 신중하게 움직이는 태도가 섣부른 선택을 막아주는 힘이 되기도 해요.', talk:'"작게 시도해볼 수 있는 한 가지가 있다면?" 으로 물어봐주세요.'},
+      D:{emoji:'💤', name:'무기력형', sub:'생각만 해도 지쳐서 피하게 돼요', desc:'미래 생각 자체가 버거워서 자꾸 미루거나 피하게 되는 상태예요. 생각만 해도 지치는 건 게을러서가 아니라, 이미 마음의 여력이 많이 소진됐다는 신호일 수 있어요. 지금까지 이만큼 버텨온 것만으로도 충분히 애쓰고 있는 거예요. 지금은 몰아붙이기보다 잠깐의 쉼이 필요해요.', talk:'"요즘 아무 생각 없이 쉰 적이 있어요?" 로 가볍게 물어봐주세요.'},
     }
   },
 ];
@@ -461,6 +475,13 @@ function showResult(){
   document.getElementById('resultType').textContent = r.name;
   document.getElementById('resultSub').textContent = r.sub;
   document.getElementById('resultDesc').textContent = r.desc;
+
+  document.getElementById('typeOverviewList').innerHTML = ['A','B','C','D'].map(k=>{
+    const t = current.results[k];
+    const cur = k === best ? ' current' : '';
+    return `<div class="to-row${cur}"><span class="to-emoji">${t.emoji}</span><span class="to-text"><span class="to-name">${t.name}</span><span class="to-sub">${t.sub}</span></span></div>`;
+  }).join('');
+
   document.getElementById('itemImg').src = current.item.img;
   document.getElementById('itemImg').alt = current.item.name;
   document.getElementById('itemName').textContent = current.item.name;
