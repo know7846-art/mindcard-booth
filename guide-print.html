@@ -22,7 +22,7 @@
   --lonely:#5B6FB0; --lonely-soft:#E7EAFA;
   --future:#4E9488; --future-soft:#DFF1EC;
 }
-*{box-sizing:border-box;}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact;color-adjust:exact;}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',sans-serif;line-height:1.55;}
 h1,h2,h3{font-family:'Gowun Dodum','Noto Sans KR',sans-serif;font-weight:400;margin:0;}
 
@@ -45,42 +45,42 @@ h1,h2,h3{font-family:'Gowun Dodum','Noto Sans KR',sans-serif;font-weight:400;mar
   width:210mm;min-height:297mm;margin:22px auto;padding:13mm 13mm;background:var(--surface);
   box-shadow:0 2px 14px rgba(36,31,46,.08);
 }
-.page-head{display:flex;align-items:center;gap:12px;margin-bottom:3mm;padding-bottom:3mm;border-bottom:2px solid var(--line);}
-.page-head .ph-emoji{font-size:1.7rem;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.page-head h2{font-size:1.2rem;margin-bottom:2px;}
-.page-head .ph-tag{font-size:.8rem;color:var(--ink-faint);}
+.page-head{display:flex;align-items:center;gap:14px;margin-bottom:4mm;padding-bottom:4mm;border-bottom:2px solid var(--line);}
+.page-head .ph-emoji{font-size:2.1rem;width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.page-head h2{font-size:1.55rem;margin-bottom:3px;}
+.page-head .ph-tag{font-size:.95rem;color:var(--ink-faint);}
 .page[data-c="love"] .ph-emoji{background:var(--love-soft);}
 .page[data-c="stress"] .ph-emoji{background:var(--stress-soft);}
 .page[data-c="lonely"] .ph-emoji{background:var(--lonely-soft);}
 .page[data-c="future"] .ph-emoji{background:var(--future-soft);}
-.page-head .ph-item{margin-left:auto;text-align:right;font-size:.76rem;color:var(--ink-faint);}
-.page-head .ph-item b{display:block;font-size:.86rem;color:var(--ink-soft);}
+.page-head .ph-item{margin-left:auto;text-align:right;font-size:.88rem;color:var(--ink-faint);}
+.page-head .ph-item b{display:block;font-size:1rem;color:var(--ink-soft);}
 
-.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:3.5mm;}
-.type-block{border:1px solid var(--line);border-radius:10px;overflow:hidden;}
-.tb-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px;padding:6px 10px;}
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:4mm;}
+.type-block{border:1px solid var(--line);border-radius:10px;overflow:hidden;break-inside:avoid;page-break-inside:avoid;}
+.tb-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:7px;padding:8px 12px;}
 .page[data-c="love"] .tb-head{background:var(--love-soft);}
 .page[data-c="stress"] .tb-head{background:var(--stress-soft);}
 .page[data-c="lonely"] .tb-head{background:var(--lonely-soft);}
 .page[data-c="future"] .tb-head{background:var(--future-soft);}
 .tb-head .tb-letter{
-  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.78rem;
-  background:var(--ink);color:#fff;border-radius:50%;width:20px;height:20px;
+  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.92rem;
+  background:var(--ink);color:#fff;border-radius:50%;width:24px;height:24px;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
-.tb-head .tb-name{font-weight:700;font-size:.84rem;}
-.tb-head .tb-sub{font-size:.68rem;color:var(--ink-soft);}
-.tb-body{padding:7px 10px 9px;}
-.tb-row{margin-bottom:5px;}
+.tb-head .tb-name{font-weight:700;font-size:1.05rem;}
+.tb-head .tb-sub{font-size:.82rem;color:var(--ink-soft);}
+.tb-body{padding:9px 12px 11px;}
+.tb-row{margin-bottom:7px;}
 .tb-row:last-child{margin-bottom:0;}
-.tb-row .tb-label{font-size:.6rem;letter-spacing:.04em;text-transform:uppercase;font-weight:700;color:var(--ink-faint);margin-bottom:1px;}
-.tb-row p,.tb-row .tb-line{margin:0;font-size:.72rem;color:var(--ink-soft);line-height:1.42;}
-.tb-scripts{display:flex;flex-direction:column;gap:3px;}
-.tb-scripts .tb-line{background:var(--surface-2);border-radius:6px;padding:4px 7px;font-size:.72rem;color:var(--ink);font-weight:500;line-height:1.4;}
-.tb-caution{background:var(--warn-soft);border-radius:6px;padding:4px 7px;font-size:.68rem;color:var(--warn);line-height:1.4;}
+.tb-row .tb-label{font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;font-weight:700;color:var(--ink-faint);margin-bottom:2px;}
+.tb-row p,.tb-row .tb-line{margin:0;font-size:.92rem;color:var(--ink-soft);line-height:1.48;}
+.tb-scripts{display:flex;flex-direction:column;gap:4px;}
+.tb-scripts .tb-line{background:var(--surface-2);border-radius:7px;padding:6px 9px;font-size:.92rem;color:var(--ink);font-weight:500;line-height:1.45;}
+.tb-caution{background:var(--warn-soft);border-radius:7px;padding:6px 9px;font-size:.86rem;color:var(--warn);line-height:1.45;}
 .tb-caution b{font-weight:700;}
 
-.page-foot{margin-top:3mm;padding-top:2mm;border-top:1px solid var(--line);font-size:.66rem;color:var(--ink-faint);display:flex;justify-content:space-between;}
+.page-foot{margin-top:4mm;padding-top:3mm;border-top:1px solid var(--line);font-size:.78rem;color:var(--ink-faint);display:flex;justify-content:space-between;}
 
 @media print{
   body{background:#fff;}
@@ -97,7 +97,7 @@ h1,h2,h3{font-family:'Gowun Dodum','Noto Sans KR',sans-serif;font-weight:400;mar
 <body>
 
 <div class="toolbar">
-  <div class="tb-left">마음카드 유형별 가이드 — <b>카드당 A4 1장, 총 4장</b>. 담당 카드 페이지만 뽑아서 또래상담자에게 나눠주세요.</div>
+  <div class="tb-left">마음카드 유형별 가이드 — <b>카드별로 구분해서 인쇄</b>됩니다. 담당 카드 페이지만 뽑아서 또래상담자에게 나눠주세요.<br>인쇄 시 배경색이 안 보이면, 인쇄 설정에서 "배경 그래픽" 옵션을 켜주세요.</div>
   <div>
     <a href="admin.html">← 관리자 페이지로</a>
     <button onclick="window.print()">인쇄하기</button>
